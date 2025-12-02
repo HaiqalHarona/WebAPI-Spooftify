@@ -1,6 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const db = require('./service/dbservice.js');
+const spotify = require('./service/spotifyservice.js');
+const archive = require('./service/archiveservice.js');
+const lyrics = require('./service/lyricsservice.js');
+const user = require('./service/userservice.js');
+const playlist = require('./service/playlistservice.js');
 const crypto = require('crypto');
 
 
