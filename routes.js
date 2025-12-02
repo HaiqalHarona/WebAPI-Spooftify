@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const db = require('./service/dbservice.js');
+const crypto = require('crypto');
+
 
 db.connect().then(function(response){
     console.log(response);
@@ -10,3 +12,5 @@ db.connect().then(function(response){
 router.use(express.urlencoded({
     extended: true
 }));
+
+module.exports = router;
