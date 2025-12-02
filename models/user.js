@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema({
     },
     password: String,
     username: String,
-    createdAt: new Date()
+    createdAt: { type: Date, default: Date.now }
 
 })
 module.exports = mongoose.model('users', userSchema);
