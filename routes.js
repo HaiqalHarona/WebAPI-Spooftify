@@ -6,6 +6,7 @@ const archive = require('./service/archiveservice.js');
 const lyrics = require('./service/lyricsservice.js');
 const user = require('./service/userservice.js');
 const playlist = require('./service/playlistservice.js');
+const likedSongs = require('./service/likedsongservice.js')
 const crypto = require('crypto');
 
 

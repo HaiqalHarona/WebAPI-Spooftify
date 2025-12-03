@@ -3,6 +3,7 @@ const playlist = require('../models/playlist.js');
 const archived = require('../models/archivedplaylist.js');
 const lyrics = require('../models/cachedLyrics.js');
 const user = require('../models/user.js');
+const likedSongs = require('../models/likedsongs.js');
 
 
 let db = {

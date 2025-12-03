@@ -1,9 +1,12 @@
 const mongoose = require('mongoose');
 
 const cachedLyricsSchema = new mongoose.Schema({
-  spotifyTrackId: String,    
-  lyrics: String,            
-  cachedAt: Date             
+  spotifyTrackId: { type: String, required: true, unique: true },
+  lyrics: String,
+  cachedAt: {
+    type: Date,
+    default: Date.now
+  },
 });
 
 module.exports = mongoose.model('CachedLyrics', cachedLyricsSchema);
