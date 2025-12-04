@@ -12,14 +12,14 @@ This application is a full-stack music web player that provides core user and pr
 * **Search for music**: This acts as the mandatory "Search products" feature.
 * **Create, Retrieve, Update, and Delete** song/music data (the 'products').
 
-### [span_2](start_span)Advanced Features[span_2](end_span)
+### Advanced Features
 
 * **Displaying Song Lyrics**: Displaying lyrics for songs accessed via an external API.
 * **Archiving Playlist**: Allows users to archive playlists they no longer actively use (one of the two additional relevant features).
 
 ---
 
-## [span_3](start_span)External APIs[span_3](end_span)
+### External APIs
 
 [span_4](start_span)The application will integrate two relevant external APIs using only **HTTP GET requests**[span_4](end_span).
 
