@@ -6,7 +6,7 @@
 
 This application is a full-stack music web player that provides core user and product management features.
 
-### [span_1](start_span)Mandatory Features[span_1](end_span)
+### Mandatory
 
 * **Register, Login, and Logout**: For user authentication and session management.
 * **Search for music**: This acts as the mandatory "Search products" feature.
