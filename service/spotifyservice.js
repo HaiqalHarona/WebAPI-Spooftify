@@ -1,9 +1,8 @@
-require('dotenv').config();
 const axios = require('axios');
 
 const spotifyService = {
   // Search for tracks on Spotify
-  searchTracks: async function(query, limit = 10) {
+  async searchTracks(query, limit = 10) {
     try {
       // Spotify Search API endpoint (public, no auth needed for search)
       const response = await axios.get(
@@ -19,11 +18,11 @@ const spotifyService = {
       );
 
       // Format the results
-      const tracks = response.data.tracks.items.map(function(track) {
+      const tracks = response.data.tracks.items.map(function (track) {
         return {
           spotifyTrackId: track.id,
           name: track.name,
-          artist: track.artists.map(function(artist) {
+          artist: track.artists.map(function (artist) {
             return artist.name;
           }).join(', '),
           album: track.album.name,
@@ -53,7 +52,7 @@ const spotifyService = {
   },
 
   // Get specific track details
-  getTrackDetails: async function(trackId) {
+  async getTrackDetails(trackId) {
     try {
       const response = await axios.get(
         `https://api.spotify.com/v1/tracks/${trackId}`
@@ -63,7 +62,7 @@ const spotifyService = {
       return {
         spotifyTrackId: track.id,
         name: track.name,
-        artist: track.artists.map(function(artist) {
+        artist: track.artists.map(function (artist) {
           return artist.name;
         }).join(', '),
         album: track.album.name,
