@@ -119,22 +119,28 @@ const spotifyCredentials = {
 
 ### Authentication
 
-*   **POST /register** - Register a new user
-*   **POST /login** - Login existing user
-*   **POST /logout** - Logout user
+*   **POST /users/create** - Register a new user
+*   **POST /users/login** - Login existing user
+*   **GET /users/logout** - Logout user (requires authentication)
 
-### Songs Management
+### Spotify Integration
 
-*   **GET /songs** - Get all songs
-*   **POST /songs** - Create a new song
-*   **GET /songs/:id** - Get a specific song
-*   **PUT /songs/:id** - Update a song
-*   **DELETE /songs/:id** - Delete a song
+*   **GET /api/search** - Search for tracks on Spotify (requires authentication)
+*   **GET /api/tracks/:id** - Get track details from Spotify (requires authentication)
+*   **GET /api/tracks/:trackId/lyrics** - Get lyrics for a specific track (requires authentication)
 
-### External APIs
+### Playlist Management
 
-*   **GET /api/search/:query** - Search songs using Spotify API
-*   **GET /api/lyrics/:artist/:title** - Get lyrics using Lyrics.ovh API
+*   **POST /api/playlists/create** - Create a new playlist (requires authentication)
+*   **GET /api/playlists** - Get all playlists for the authenticated user
+*   **DELETE /api/playlists/:id** - Delete a playlist (requires authentication)
+*   **POST /api/playlists/:id/add** - Add a track to a playlist (requires authentication)
+
+### Archive Management
+
+*   **POST /api/playlists/:id/archive** - Archive a playlist (requires authentication)
+*   **GET /api/archives** - Get all archived playlists for the authenticated user
+*   **POST /api/archives/:id/unarchive** - Restore an archived playlist (requires authentication)
 
 ---
 
@@ -144,4 +150,4 @@ const spotifyCredentials = {
 *   [Lyrics.ovh API Documentation](https://lyricsovh.docs.apiary.io/)
 *   [Axios Documentation](https://axios-http.com/docs/intro)
 *   [Dotenv Documentation](https://www.npmjs.com/package/dotenv)
-*   [Video Refrence While Creating This](https://www.youtube.com/watch?v=TN1uvgAyxE0&t=130s)
+*   [Video Reference For Spotify Web Api Node](https://www.youtube.com/watch?v=TN1uvgAyxE0&t=130s)
