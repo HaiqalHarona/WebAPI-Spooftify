@@ -10,12 +10,10 @@ const playlistSchema = new mongoose.Schema({
     },
     name: { type: String, required: true },
     description: String,
-    creator: String,
     tracks: [{
         spotifyTrackId: { type: String, required: true, unique: true},
         name: { type: String, required: true },
         artist: { type: String, required: true },
-        previewUrl: String, 
         durationMs: Number,
         albumImage: String 
     }],
