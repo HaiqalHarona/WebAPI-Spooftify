@@ -4,7 +4,7 @@ const user = require('./user.js');
 
 const likedSongsSchema = new mongoose.Schema({
      tracks: [{
-        spotifyTrackId: { type: String, required: true, unique: true},
+        spotifyTrackId: { type: String, required: true },
         name: { type: String, required: true },
         artist: { type: String, required: true },
         album: String,

@@ -132,6 +132,7 @@ router.post('/users/login', async function (req, res) {
     res.status(500).json({ "message": "Login failed: " + error.message });
   }
 });
+
 // Logout
 router.get('/users/logout', authenticate, async function (req, res) {
   let userId = res.locals.userId; // Get userId from authenticated middleware
@@ -144,6 +145,7 @@ router.get('/users/logout', authenticate, async function (req, res) {
     res.status(500).json({ "message": "Logout failed: " + error.message });
   }
 });
+
 // Create User
 router.post('/users/create', function (req, res) {
   let { email, password, username } = req.body;
@@ -155,6 +157,7 @@ router.post('/users/create', function (req, res) {
     res.status(500).json({ "message": "User creation failed: " + error.message });
   });
 });
+
 // Create Playlist
 router.post('/api/playlists/create', async function (req, res) {
   try {
@@ -181,6 +184,43 @@ router.post('/api/playlists/create', async function (req, res) {
   } catch (error) {
     console.error('Error in create playlist route:', error.message);
     res.status(500).json({ message: "Failed to create playlist: " + error.message });
+  }
+});
+
+// Delete Playlist
+router.delete('/api/playlists/:id', async function (req, res) {
+  try {
+    const playlistId = req.params.id;
+    const userId = res.locals.userId;
+
+    const result = await playlist.deletePlaylist(playlistId, userId);
+
+    // Return success response
+    res.status(200).json({
+      success: true,
+      message: result
+    });
+  } catch (error) {
+    console.error('Error in delete playlist route:', error.message);
+    res.status(500).json({ message: "Failed to delete playlist: " + error.message });
+  }
+})
+
+// Get All Playlists for a User
+router.get('/api/playlists', async function (req, res) {
+  try {
+    const userId = res.locals.userId;
+    const playlists = await playlist.getPlaylist(userId);
+
+    res.status(200).json({
+      success: true,
+      count: playlists.length,
+      playlists: playlists
+    });
+
+  } catch (error) {
+    console.error('Error getting playlists:', error.message);
+    res.status(500).json({ message: "Failed to retrieve playlists: " + error.message });
   }
 });
 
@@ -222,5 +262,59 @@ router.post('/api/playlists/:id/add', async function (req, res) {
   }
 });
 
+// Archive a Playlist
+router.post('/api/playlists/:id/archive', async function (req, res) {
+  try {
+    const playlistId = req.params.id;
+    const userId = res.locals.userId;
+
+    const archivedPlaylist = await archive.createArchive(playlistId, userId);
+
+    res.status(200).json({
+      success: true,
+      message: `Playlist ${archivedPlaylist.name} archived successfully.`,
+      archivedPlaylist: archivedPlaylist
+    });
+  } catch (error) {
+    console.error('Error in archive playlist route:', error.message);
+    // Includes Search for SubString that has the word "not found" in the error message
+    if (error.message.includes('not found')) {
+      return res.status(404).json({ message: error.message });
+    }
+    res.status(500).json({ message: "Failed to archive playlist: " + error.message });
+  }
+});
+
+// Get All Archived Playlists for a User
+router.get('/api/archives', async function (req, res) {
+  try {
+    const userId = res.locals.userId;
+    const archivedPlaylists = await archive.getArchivedPlaylists(userId);
+
+    res.status(200).json({
+      success: true,
+      count: archivedPlaylists.length,
+      archivedPlaylists: archivedPlaylists
+    });
+  } catch (error) {
+    console.error('Error getting archived playlists:', error.message);
+    res.status(500).json({ message: "Failed to retrieve archived playlists: " + error.message });
+  }
+});
+
+// Unarchive a Playlist
+router.post('/api/archives/:id/unarchive', async function (req, res) {
+  try {
+    const archivedPlaylistId = req.params.id;
+    const userId = res.locals.userId;
+
+    const newPlaylist = await archive.unarchivePlaylist(archivedPlaylistId, userId);
+
+    res.status(200).json({ success: true, message: `Playlist "${newPlaylist.name}" has been restored.`, playlist: newPlaylist });
+  } catch (error) {
+    console.error('Error in unarchive playlist route:', error.message);
+    res.status(500).json({ message: "Failed to unarchive playlist: " + error.message });
+  }
+});
 
 module.exports = router;

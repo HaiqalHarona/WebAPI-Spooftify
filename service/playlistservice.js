@@ -3,10 +3,10 @@ const playlist = require('../models/playlist.js');
 const user = require('../models/user.js');
 
 let playlistService = {
-    async createPlaylist(userId, name, tracks, createdAt) {
+    async createPlaylist(user, name, tracks, createdAt) {
         try {
             await playlist.create({
-                user: userId,
+                user: user,
                 name: name,
                 tracks: tracks,
                 createdAt: createdAt
@@ -50,6 +50,34 @@ let playlistService = {
             throw new Error(`Failed to add track to playlist: ${e.message}`);
         }
     },
+    async getPlaylist(user) {
+        try {
+            const playlists = await playlist.find({
+                user: user
+            })
+                .sort({
+                    createdAt: -1
+                }); // Sort by most recently archived
+            return playlists;
+        } catch (e) {
+            console.error(`Error retrieving playlists: ${e.message}`);
+            throw new Error('Could not retrieve playlists');
+        }
+    },
+    async deletePlaylist(playlistId, user) {
+        try {
+            const deletedPlaylist = await playlist.findOneAndDelete({
+                _id: playlistId,
+                user: user
+            });
+            if (!deletedPlaylist) {
+                throw new Error('Playlist not found or you do not have permission to delete it');
+            }
+            return `Playlist with ID ${playlistId} deleted successfully.`;
+        } catch (e) {
+            console.error(e.message);
+        }
+    }
 
 }
 module.exports = playlistService;

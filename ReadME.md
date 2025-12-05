@@ -10,12 +10,14 @@ A full-stack music web player application with user authentication, music manage
 
 *   **Register, Login, and Logout**: User authentication and session management
 *   **Search for music**: Search functionality for music products
-*   **CRUD Operations**: Create, Retrieve, Update, and Delete song and playlist data
+*   **CRUD Operations**: Create, Retrieve, Update, and Delete song, playlist and user data
 
 ### Advanced Features
 
 *   **Displaying Song Lyrics**: Display lyrics for songs using an external API
 *   **Archiving Playlist**: Archive playlists users no longer actively use
+*   **Liked Songs**: Users can like songs and view their liked songs
+
 
 ---
 

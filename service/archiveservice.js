@@ -1,38 +1,30 @@
 const mongoose = require('mongoose');
 const playlist = require('../models/playlist.js');
+const Playlist = require('../models/playlist.js'); 
 const archived = require('../models/archivedplaylist.js');
 const user = require('../models/user.js');
 
 let archive = {
-  /**
-   * Archives a playlist for a given user.
-   * It copies the playlist data to the archived collection and deletes the original.
-   * @param {string} playlistId - The ID of the playlist to archive.
-   * @param {string} userId - The ID of the user performing the action.
-   * @returns {Promise<Object>} The newly created archived playlist document.
-   */
-  async createArchive(playlistId, userId) {
+   
+  async createArchive(playlistId, user) {
     try {
-      const originalPlaylist = await playlist.findOne({
+      const originalPlaylist = await Playlist.findOne({
         _id: playlistId,
-        user: userId
+        user: user
       });
 
       if (!originalPlaylist) {
-        throw new Error('Playlist not found or you do not have permission to archive it.');
+        throw new Error('Playlist not found or you do not have permission to archive it');
       }
 
-      // Create the archived version in a single step
       const newArchivedPlaylist = await archived.create({
-        user: userId,
-        playlist: playlistId, // Reference to the original playlist ID
+        user: user,
+        originalPlaylistId: playlistId,
         name: originalPlaylist.name,
         tracks: originalPlaylist.tracks.map(track => ({
-          trackId: track.spotifyTrackId,
+          spotifyTrackId: track.spotifyTrackId,
           name: track.name,
           artist: track.artist
-          // Note: previewUrl is not in the original playlist model, so it will be undefined.
-          // This is okay if the source 'track' object doesn't have it.
         }))
       });
 
@@ -42,27 +34,56 @@ let archive = {
       return newArchivedPlaylist;
     } catch (e) {
       console.error(e.message);
-      throw new Error(`Failed to archive playlist with ID: ${playlistId}.`);
+      throw new Error(`Failed to archive playlist with ID ${playlistId}: ${e.message}`);
     }
   },
 
-  /**
-   * Retrieves all archived playlists for a specific user.
-   * @param {string} userId - The ID of the user.
-   * @returns {Promise<Array<Object>>} A list of archived playlists.
-   */
-  async getArchivedPlaylists(userId) {
+
+  async getArchivedPlaylists(user) {
     try {
       const archivedPlaylists = await archived.find({
-          user: userId
+          user: user
         })
         .sort({
           archivedAt: -1
         }); // Sort by most recently archived
       return archivedPlaylists;
     } catch (e) {
-      console.error(e.message);
-      throw new Error('Could not retrieve archived playlists.');
+      console.error(`Error retrieving archived playlists: ${e.message}`);
+      throw new Error('Could not retrieve archived playlists');
+    }
+  },
+
+  async unarchivePlaylist(archivedPlaylistId, user) {
+    try {
+      const archivedPlaylist = await archived.findOne({
+        _id: archivedPlaylistId,
+        user: user
+      });
+
+      if (!archivedPlaylist) {
+        throw new Error('Archived playlist not found or you do not have permission to unarchive it');
+      }
+
+      // Create a new playlist from the archived data
+      const newPlaylist = await Playlist.create({
+        user: user,
+        name: archivedPlaylist.name,
+        tracks: archivedPlaylist.tracks.map(track => ({
+          spotifyTrackId: track.spotifyTrackId,
+          name: track.name,
+          artist: track.artist
+        })),
+        createdAt: new Date()
+      });
+
+      // Delete the archived playlist
+      await archived.findByIdAndDelete(archivedPlaylistId);
+
+      return newPlaylist;
+    } catch (e) {
+      console.error(`Error unarchiving playlist: ${e.message}`);
+      throw new Error(`Failed to unarchive playlist with ID ${archivedPlaylistId}: ${e.message}`);
     }
   }
 };
