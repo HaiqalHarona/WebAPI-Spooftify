@@ -14,24 +14,12 @@ const archivedPlaylistSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId, 
     ref: 'playlists', 
     required: true 
-  },
-  
-  name: { 
-    type: String, 
-    required: true 
-  },
-  
+  },  
   archivedAt: { 
     type: Date, 
     default: Date.now 
   },
   
-  tracks: [{
-    trackId: String,
-    name: String,
-    artist: String,
-    previewUrl: String
-  }]
 });
 
 module.exports = mongoose.model('ArchivedPlaylist', archivedPlaylistSchema);

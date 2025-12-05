@@ -3,7 +3,14 @@ const user = require('./user.js');
 
 
 const likedSongsSchema = new mongoose.Schema({
-    spotifyTrackId: { type: String, required: true, unique: true },
+     tracks: [{
+        spotifyTrackId: { type: String, required: true, unique: true},
+        name: { type: String, required: true },
+        artist: { type: String, required: true },
+        album: String,
+        durationMs: Number,
+        albumImage: String 
+    }],
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'users',
