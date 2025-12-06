@@ -1,0 +1,553 @@
+{
+  "info": {
+    "_postman_id": "565e3267-57d5-475c-9416-2503e86af386",
+    "name": "Spooftify",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "49758715",
+    "_collection_link": "https://jamycharle-5723632.postman.co/workspace/ea4a61ac-592c-46a3-816b-60f97315b99a/collection/49758715-565e3267-57d5-475c-9416-2503e86af386?action=share&source=collection_link&creator=49758715"
+  },
+  "item": [
+    {
+      "name": "SearchSongs",
+      "id": "43d26f0f-9cbf-4e1e-9a41-9cf7be121eef",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{url}}api/search?q=graduating hallucinating&token={{token}}",
+          "host": [
+            "{{url}}api"
+          ],
+          "path": [
+            "search"
+          ],
+          "query": [
+            {
+              "key": "q",
+              "value": "graduating hallucinating"
+            },
+            {
+              "key": "token",
+              "value": "{{token}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GetTrackDetails",
+      "id": "cee1227e-4ef6-42c0-86f9-d9e965b6abf3",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{url}}api/tracks/0atlweNQsTyvhaXLJZvyba?token={{token}}",
+          "host": [
+            "{{url}}api"
+          ],
+          "path": [
+            "tracks",
+            "0atlweNQsTyvhaXLJZvyba"
+          ],
+          "query": [
+            {
+              "key": "token",
+              "value": "{{token}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GetLyrics",
+      "id": "9355f8a8-469c-4409-8e91-1b9c965ffa59",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{url}}api/tracks/3J6I2S9sTNVStKhkrPp3yd/lyrics?token={{token}}",
+          "host": [
+            "{{url}}api"
+          ],
+          "path": [
+            "tracks",
+            "3J6I2S9sTNVStKhkrPp3yd",
+            "lyrics"
+          ],
+          "query": [
+            {
+              "key": "token",
+              "value": "{{token}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "CreateUser",
+      "id": "3dbbdf5c-e1a7-443a-9269-6aaa61b37282",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "email",
+              "value": "usertest2@gmail.com",
+              "type": "text"
+            },
+            {
+              "key": "password",
+              "value": "12345678",
+              "type": "text"
+            },
+            {
+              "key": "username",
+              "value": "UserTest22",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{url}}users/create",
+          "host": [
+            "{{url}}users"
+          ],
+          "path": [
+            "create"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Login",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "29d29490-df3a-4f0b-b8cf-bae4d02b734f",
+            "exec": [
+              "if (pm.response.code === 200) {",
+              "    let jsonData;",
+              "    try {",
+              "        jsonData = pm.response.json();",
+              "    } catch (e) {",
+              "        jsonData = {};",
+              "    }",
+              "    if (jsonData && jsonData.token) {",
+              "        pm.environment.set('token', jsonData.token);",
+              "    }",
+              "}"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "47fb0ab3-23fd-48ae-921b-3c0c3efa91e1",
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "id": "6cbfe53c-0ecf-4f8b-a6f8-81594d6094fb",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "email",
+              "value": "usertest@gmail.com",
+              "type": "text"
+            },
+            {
+              "key": "password",
+              "value": "12345678",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{url}}users/login",
+          "host": [
+            "{{url}}users"
+          ],
+          "path": [
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Logout",
+      "id": "64491cee-4062-4e2b-bdb5-2f929257c8be",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{url}}users/logout?token={{token}}",
+          "host": [
+            "{{url}}users"
+          ],
+          "path": [
+            "logout"
+          ],
+          "query": [
+            {
+              "key": "token",
+              "value": "{{token}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "CreatePlaylist",
+      "id": "ab9869c1-e2ac-4d7b-a6b2-b1bb25803b82",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "name",
+              "value": "PlaylistTest221121wwww",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{url}}api/playlists/create?token={{token}}",
+          "host": [
+            "{{url}}api"
+          ],
+          "path": [
+            "playlists",
+            "create"
+          ],
+          "query": [
+            {
+              "key": "token",
+              "value": "{{token}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "AddToPlaylist",
+      "id": "9c1f9022-d2dd-4adc-b306-8b04fa1efdba",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "spotifyTrackId",
+              "value": "6zfjxjWld0WCAnPsk8TeqG",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{url}}api/playlists/693357956dc4e651da122563/add?token={{token}}",
+          "host": [
+            "{{url}}api"
+          ],
+          "path": [
+            "playlists",
+            "693357956dc4e651da122563",
+            "add"
+          ],
+          "query": [
+            {
+              "key": "token",
+              "value": "{{token}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ArchivePlaylist",
+      "id": "46fffdbd-1b3e-461c-a6eb-70fdd82b9e1f",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{url}}api/playlists/6933579a6dc4e651da122566/archive?token={{token}}",
+          "host": [
+            "{{url}}api"
+          ],
+          "path": [
+            "playlists",
+            "6933579a6dc4e651da122566",
+            "archive"
+          ],
+          "query": [
+            {
+              "key": "token",
+              "value": "{{token}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "UnarchivePlaylist",
+      "id": "4fcef321-8adb-4561-84ca-884debb4ace8",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{url}}api/archives/693350529bde6f27f69c1946/unarchive?token={{token}}",
+          "host": [
+            "{{url}}api"
+          ],
+          "path": [
+            "archives",
+            "693350529bde6f27f69c1946",
+            "unarchive"
+          ],
+          "query": [
+            {
+              "key": "token",
+              "value": "{{token}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "DeletePlaylist",
+      "id": "f5a7f914-52ef-42bf-a48e-b9092afe9427",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{url}}api/playlists/69335cada573a228a0fa6fbb?token={{token}}",
+          "host": [
+            "{{url}}api"
+          ],
+          "path": [
+            "playlists",
+            "69335cada573a228a0fa6fbb"
+          ],
+          "query": [
+            {
+              "key": "token",
+              "value": "{{token}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GetAllArchivePlaylist",
+      "id": "93835826-1c96-4712-ba83-bd2ee3ef9d33",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{url}}api/archives?token={{token}}",
+          "host": [
+            "{{url}}api"
+          ],
+          "path": [
+            "archives"
+          ],
+          "query": [
+            {
+              "key": "token",
+              "value": "{{token}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GetAllPlaylist",
+      "id": "d2809001-a901-4b5c-b73e-02608be40ad9",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{url}}api/playlists?token={{token}}",
+          "host": [
+            "{{url}}api"
+          ],
+          "path": [
+            "playlists"
+          ],
+          "query": [
+            {
+              "key": "token",
+              "value": "{{token}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "LikeSongs",
+      "id": "4a1eafdb-ca64-4981-875c-7ce86fcbc476",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "spotifyTrackId",
+              "value": "27NirKBeqbyairEHlEuyEk",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{url}}api/liked-songs?token={{token}}",
+          "host": [
+            "{{url}}api"
+          ],
+          "path": [
+            "liked-songs"
+          ],
+          "query": [
+            {
+              "key": "token",
+              "value": "{{token}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "RemoveLikeSongs",
+      "id": "c643fbe8-422a-48be-8ff3-04a4efe9da8d",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{url}}api/liked-songs/6aUiLphVsi9ZIjpt3kRuEm?token={{token}}",
+          "host": [
+            "{{url}}api"
+          ],
+          "path": [
+            "liked-songs",
+            "6aUiLphVsi9ZIjpt3kRuEm"
+          ],
+          "query": [
+            {
+              "key": "token",
+              "value": "{{token}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "RemoveSongsFromPlaylist",
+      "id": "63faf0a4-648c-4806-b2a1-bd7343fd2c28",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{url}}api/playlists/693357956dc4e651da122563/tracks/6zfjxjWld0WCAnPsk8TeqG?token={{token}}",
+          "host": [
+            "{{url}}api"
+          ],
+          "path": [
+            "playlists",
+            "693357956dc4e651da122563",
+            "tracks",
+            "6zfjxjWld0WCAnPsk8TeqG"
+          ],
+          "query": [
+            {
+              "key": "token",
+              "value": "{{token}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GetUserLikeSongs",
+      "id": "b951d668-fe85-4bfc-bea5-5328d5baf571",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{url}}api/liked-songs?token={{token}}",
+          "host": [
+            "{{url}}api"
+          ],
+          "path": [
+            "liked-songs"
+          ],
+          "query": [
+            {
+              "key": "token",
+              "value": "{{token}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GetAllTracksFromPlaylist",
+      "id": "58f7d380-4253-46bd-b7e9-8bc5c54b90df",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{url}}api/playlists/693357956dc4e651da122563/tracks?token={{token}}",
+          "host": [
+            "{{url}}api"
+          ],
+          "path": [
+            "playlists",
+            "693357956dc4e651da122563",
+            "tracks"
+          ],
+          "query": [
+            {
+              "key": "token",
+              "value": "{{token}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
