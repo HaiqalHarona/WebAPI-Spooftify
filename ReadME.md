@@ -74,17 +74,42 @@ Two relevant node modules, not covered in the curriculum, are utilized.
 *   **Usage**: Clean, structured, and efficient API calls to external services
 
 ```javascript
-// Installation and basic setup
+// Usage example
 const axios = require('axios');
 
-// Example configuration
-const spotifyApi = axios.create({
-  baseURL: 'https://api.spotify.com/v1',
-  timeout: 5000,
-  headers: {
-    'Content-Type': 'application/json'
-  }
-});
+// Helper function to fetch from Lyrics.ovh API
+    async fetchFromLyricsAPI(trackName, artistName) {
+        try {
+            // Encode the artist and track name for URL
+            const encodedArtist = encodeURIComponent(artistName);
+            const encodedTrack = encodeURIComponent(trackName);
+
+            const response = await axios.get(
+                `https://api.lyrics.ovh/v1/${encodedArtist}/${encodedTrack}`,
+                {
+                    timeout: 10000 // 10 second timeout
+                }
+            );
+
+            if (response.data && response.data.lyrics) {
+                return response.data.lyrics;
+            } else {
+                return "Lyrics not found for this track.";
+            }
+
+        } catch (error) {
+            console.error('Lyrics API Error:', error.message);
+
+            // Return different messages based on error type
+            if (error.code === 'ECONNABORTED') {
+                return "Lyrics service timeout. Please try again.";
+            } else if (error.response && error.response.status === 404) {
+                return "Lyrics not found for this track.";
+            } else {
+                return "Could not fetch lyrics at this time. Service may be unavailable.";
+            }
+        }
+    }
 ```
 
 ### Dotenv
@@ -93,7 +118,7 @@ const spotifyApi = axios.create({
 *   **Usage**: Securely store sensitive configuration like API keys
 
 ```javascript
-// Installation and usage
+// Usage
 require('dotenv').config();
 
 // .env file structure

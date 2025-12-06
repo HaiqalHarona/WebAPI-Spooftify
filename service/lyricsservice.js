@@ -67,7 +67,7 @@ const lyricsService = {
             const response = await axios.get(
                 `https://api.lyrics.ovh/v1/${encodedArtist}/${encodedTrack}`,
                 {
-                    timeout: 5000 // 5 second timeout
+                    timeout: 10000 // 10 second timeout
                 }
             );
 
