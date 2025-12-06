@@ -135,7 +135,7 @@ router.post('/users/login', async function (req, res) {
 
 // Logout
 router.get('/users/logout', authenticate, async function (req, res) {
-  let userId = res.locals.userId; // Get userId from authenticated middleware
+  let userId = res.locals.userId;
 
   try {
     await user.removeToken(userId);
@@ -262,6 +262,48 @@ router.post('/api/playlists/:id/add', async function (req, res) {
   }
 });
 
+// Remove Track from Playlist
+router.delete('/api/playlists/:id/tracks/:trackId', async function (req, res) {
+  try {
+    const playlistId = req.params.id;
+    const trackId = req.params.trackId;
+    const userId = res.locals.userId;
+
+    // Remove the track from the playlist
+    const result = await playlist.removeFromPlaylist(playlistId, userId, trackId);
+
+    // Return success response
+    res.status(200).json({
+      success: true,
+      message: result
+    });
+  } catch (error) {
+    console.error('Error in remove from playlist route:', error.message);
+    res.status(500).json({ message: "Failed to remove track from playlist: " + error.message });
+  }
+});
+
+// Get All Tracks from a Playlist
+router.get('/api/playlists/:id/tracks', async function (req, res) {
+  try {
+    const playlistId = req.params.id;
+    const userId = res.locals.userId;
+
+    // Get all tracks from the playlist
+    const tracks = await playlist.getPlaylistSongs(playlistId, userId);
+
+    // Return success response
+    res.status(200).json({
+      success: true,
+      count: tracks.length,
+      tracks: tracks
+    });
+  } catch (error) {
+    console.error('Error in get playlist songs route:', error.message);
+    res.status(500).json({ message: "Failed to get playlist songs: " + error.message });
+  }
+});
+
 // Archive a Playlist
 router.post('/api/playlists/:id/archive', async function (req, res) {
   try {
@@ -314,6 +356,94 @@ router.post('/api/archives/:id/unarchive', async function (req, res) {
   } catch (error) {
     console.error('Error in unarchive playlist route:', error.message);
     res.status(500).json({ message: "Failed to unarchive playlist: " + error.message });
+  }
+});
+
+// Add a song to user's liked songs
+router.post('/api/liked-songs', async function (req, res) {
+  try {
+    const userId = res.locals.userId;
+    const { spotifyTrackId } = req.body;
+    
+    // Validate input
+    if (!spotifyTrackId) {
+      return res.status(400).json({
+        message: "Track ID is required"
+      });
+    }
+    
+    // Add the track to liked songs
+    const result = await likedSongs.addLikedSong(userId, spotifyTrackId);
+    
+    if (result.success) {
+      res.status(201).json({
+        success: true,
+        message: result.message,
+        track: result.track
+      });
+    } else {
+      res.status(400).json({
+        success: false,
+        message: result.message
+      });
+    }
+  } catch (error) {
+    console.error('Error in add liked song route:', error.message);
+    res.status(500).json({ message: "Failed to add track to liked songs: " + error.message });
+  }
+});
+
+// Remove a song from user's liked songs
+router.delete('/api/liked-songs/:trackId', async function (req, res) {
+  try {
+    const userId = res.locals.userId;
+    const trackId = req.params.trackId;
+    
+    // Remove the track from liked songs
+    const result = await likedSongs.removeLikedSong(userId, trackId);
+    
+    if (result.success) {
+      res.status(200).json({
+        success: true,
+        message: result.message,
+        track: result.track
+      });
+    } else {
+      res.status(400).json({
+        success: false,
+        message: result.message
+      });
+    }
+  } catch (error) {
+    console.error('Error in remove liked song route:', error.message);
+    res.status(500).json({ message: "Failed to remove track from liked songs: " + error.message });
+  }
+});
+
+// Get user's liked songs
+router.get('/api/liked-songs', async function (req, res) {
+  try {
+    const userId = res.locals.userId;
+    
+    // Find user's liked songs
+    const userLikedSongs = await require('./models/likedsongs.js').findOne({ user: userId });
+    
+    if (!userLikedSongs) {
+      return res.status(200).json({
+        success: true,
+        message: "No liked songs found",
+        tracks: []
+      });
+    }
+    
+    res.status(200).json({
+      success: true,
+      count: userLikedSongs.tracks.length,
+      tracks: userLikedSongs.tracks
+    });
+  } catch (error) {
+    console.error('Error in get liked songs route:', error.message);
+    res.status(500).json({ message: "Failed to retrieve liked songs: " + error.message });
   }
 });
 

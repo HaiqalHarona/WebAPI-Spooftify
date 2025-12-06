@@ -2,6 +2,57 @@
 
 A full-stack music web player application with user authentication, music management, and external API integrations.
 
+## Installation
+
+To install and run this project, follow these steps:
+
+1. Clone this repository:
+```bash
+git clone https://github.com/yourusername/WebAPI-Spooftify.git
+cd WebAPI-Spooftify
+```
+
+2. Install the required dependencies:
+```bash
+npm install
+```
+
+### Required Dependencies
+
+This project uses the following external Node.js modules:
+
+- **axios** (^1.13.2) - Promise-based HTTP client for making requests to external APIs
+- **dotenv** (^17.2.3) - Loads environment variables from a .env file
+- **express** (^5.1.0) - Fast, unopinionated, minimalist web framework for Node.js
+- **init** (^0.1.2) - Utility for initializing projects
+- **mongoose** (^9.0.0) - MongoDB object modeling tool designed to work in an asynchronous environment
+- **nodemon** (^3.1.11) - Tool that helps develop Node.js based applications by automatically restarting the node application when file changes in the directory are detected
+- **spotify-web-api-node** (^5.0.2) - Node.js wrapper for Spotify's Web API
+
+### Environment Variables
+
+Create a `.env` file in the root directory and add the following variables:
+
+```
+SPOTIFY_CLIENT_ID=your_spotify_client_id
+SPOTIFY_CLIENT_SECRET=your_spotify_client_secret
+REDIRECT_URI=Spotify_redirect_uri
+```
+
+Replace the placeholder values with your actual Spotify API credentials and MongoDB connection string.
+
+### Running the Application
+
+To start the application in development mode:
+```bash
+npm run dev
+```
+
+To start the application in production mode:
+```bash
+npm start
+```
+
 ---
 
 ## Key Features
@@ -160,12 +211,20 @@ const spotifyCredentials = {
 *   **GET /api/playlists** - Get all playlists for the authenticated user
 *   **DELETE /api/playlists/:id** - Delete a playlist (requires authentication)
 *   **POST /api/playlists/:id/add** - Add a track to a playlist (requires authentication)
+*   **DELETE /api/playlists/:id/tracks/:trackId** - Remove a track from a playlist (requires authentication)
+*   **GET /api/playlists/:id/tracks** - Get all tracks from a playlist (requires authentication)
 
 ### Archive Management
 
 *   **POST /api/playlists/:id/archive** - Archive a playlist (requires authentication)
 *   **GET /api/archives** - Get all archived playlists for the authenticated user
 *   **POST /api/archives/:id/unarchive** - Restore an archived playlist (requires authentication)
+
+### Liked Songs Management
+
+*   **POST /api/liked-songs** - Add a track to user's liked songs (requires authentication)
+*   **DELETE /api/liked-songs/:trackId** - Remove a track from user's liked songs (requires authentication)
+*   **GET /api/liked-songs** - Get all liked songs for the authenticated user (requires authentication)
 
 ---
 

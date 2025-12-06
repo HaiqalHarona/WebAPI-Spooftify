@@ -50,6 +50,39 @@ let playlistService = {
             throw new Error(`Failed to add track to playlist: ${e.message}`);
         }
     },
+
+    async removeFromPlaylist(playlistId, userId, trackId) {
+        try {
+            // Find the playlist and verify it belongs to the user
+            const foundPlaylist = await playlist.findOne({
+                _id: playlistId,
+                user: userId
+            });
+
+            if (!foundPlaylist) {
+                throw new Error('Playlist not found or you don\'t have permission to modify it');
+            }
+
+            // Find the index of the track to remove
+            const trackIndex = foundPlaylist.tracks.findIndex(
+                t => t.spotifyTrackId === trackId
+            );
+
+            if (trackIndex === -1) {
+                throw new Error('Track not found in the playlist');
+            }
+
+            // Remove the track from the playlist
+            const removedTrack = foundPlaylist.tracks.splice(trackIndex, 1)[0];
+            await foundPlaylist.save();
+
+            return `Track "${removedTrack.name}" removed from playlist successfully.`;
+        } catch (e) {
+            console.error(e.message);
+            throw new Error(`Failed to remove track from playlist: ${e.message}`);
+        }
+    },
+
     async getPlaylist(user) {
         try {
             const playlists = await playlist.find({
@@ -64,6 +97,27 @@ let playlistService = {
             throw new Error('Could not retrieve playlists');
         }
     },
+
+    async getPlaylistSongs(playlistId, userId) {
+        try {
+            // Find the playlist and verify it belongs to the user
+            const foundPlaylist = await playlist.findOne({
+                _id: playlistId,
+                user: userId
+            });
+
+            if (!foundPlaylist) {
+                throw new Error('Playlist not found or you don\'t have permission to access it');
+            }
+
+            // Return the tracks from the playlist
+            return foundPlaylist.tracks;
+        } catch (e) {
+            console.error(e.message);
+            throw new Error(`Failed to get playlist songs: ${e.message}`);
+        }
+    },
+
     async deletePlaylist(playlistId, user) {
         try {
             const deletedPlaylist = await playlist.findOneAndDelete({
