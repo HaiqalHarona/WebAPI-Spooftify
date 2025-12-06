@@ -1,0 +1,17 @@
+[{
+  "_id": {
+    "$oid": "693357c36dc4e651da12256a"
+  },
+  "user": {
+    "$oid": "69328bfde66fcf3316311ee0"
+  },
+  "originalPlaylistId": {
+    "$oid": "6933579a6dc4e651da122566"
+  },
+  "name": "PlaylistTest21",
+  "tracks": [],
+  "archivedAt": {
+    "$date": "2025-12-05T22:08:03.723Z"
+  },
+  "__v": 0
+}]

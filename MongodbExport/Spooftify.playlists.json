@@ -1,0 +1,79 @@
+[{
+  "_id": {
+    "$oid": "6933578c6dc4e651da122560"
+  },
+  "user": {
+    "$oid": "69328bfde66fcf3316311ee0"
+  },
+  "name": "PlaylistTest2",
+  "tracks": [],
+  "createdAt": {
+    "$date": "2025-12-05T22:07:08.155Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "693357956dc4e651da122563"
+  },
+  "user": {
+    "$oid": "69328bfde66fcf3316311ee0"
+  },
+  "name": "PlaylistTest22",
+  "tracks": [
+    {
+      "spotifyTrackId": "0atlweNQsTyvhaXLJZvyba",
+      "name": "Faded Love",
+      "artist": "Wonder Girls",
+      "album": "REBOOT",
+      "durationMs": 233306,
+      "albumImage": "https://i.scdn.co/image/ab67616d0000b273af44773914c32c0327509e57",
+      "_id": {
+        "$oid": "693358216dc4e651da12256f"
+      }
+    },
+    {
+      "spotifyTrackId": "7zYtn0U2yDdLPQfc2Jct9F",
+      "name": "BITE!",
+      "artist": "Sān-Z, HOYO-MiX",
+      "album": "BITE!",
+      "durationMs": 222838,
+      "albumImage": "https://i.scdn.co/image/ab67616d0000b273d97e2c6ea1bfebc2b6090e2f",
+      "_id": {
+        "$oid": "693359196dc4e651da122574"
+      }
+    }
+  ],
+  "createdAt": {
+    "$date": "2025-12-05T22:07:17.282Z"
+  },
+  "__v": 4
+},
+{
+  "_id": {
+    "$oid": "6933fbcfc59d12a4e24a2975"
+  },
+  "user": {
+    "$oid": "69328bfde66fcf3316311ee0"
+  },
+  "name": "PlaylistTest221121",
+  "tracks": [],
+  "createdAt": {
+    "$date": "2025-12-06T09:47:59.617Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6933fc93c59d12a4e24a297c"
+  },
+  "user": {
+    "$oid": "6933fbbfc59d12a4e24a2972"
+  },
+  "name": "PlaylistTest221121wwww",
+  "tracks": [],
+  "createdAt": {
+    "$date": "2025-12-06T09:51:15.270Z"
+  },
+  "__v": 0
+}]
