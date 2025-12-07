@@ -36,7 +36,7 @@ Create a `.env` file in the root directory and add the following variables:
 ```
 SPOTIFY_CLIENT_ID=your_spotify_client_id
 SPOTIFY_CLIENT_SECRET=your_spotify_client_secret
-REDIRECT_URI=Spotify_redirect_uri
+REDIRECT_URI=Spotify_redirect_url
 ```
 
 Replace the placeholder values with your actual Spotify API credentials and MongoDB connection string.
