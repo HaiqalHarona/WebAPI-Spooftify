@@ -1,0 +1,55 @@
+
+/* --- Profile Page Specifics --- */
+.profile-container {
+    max-width: 600px;
+    margin: 40px auto;
+    background-color: var(--dark-gray);
+    padding: 40px;
+    border-radius: 12px;
+}
+
+.profile-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.profile-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background-color: var(--medium-gray);
+    margin: 0 auto 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3em;
+    color: var(--light-gray);
+    border: 3px solid var(--primary-color);
+}
+
+/* Styling for non-editable fields */
+input[readonly] {
+    background-color: var(--background-color) !important;
+    color: var(--light-gray);
+    cursor: not-allowed;
+    border: 1px solid transparent;
+}
+
+.save-changes-btn {
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+    padding: 12px 25px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1em;
+    margin-top: 20px;
+    width: 100%;
+    transition: transform 0.2s;
+}
+
+.save-changes-btn:hover {
+    transform: scale(1.02);
+    background-color: #1ED760;
+}

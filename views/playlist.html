@@ -4,94 +4,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spooftify Playlist UI - Bootstrap</title>
+    <title>Spooftify</title>
 
-    <!-- Load Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         xintegrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
-    <!-- Load Bootstrap Icons (Used for the UI elements like clock) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/global.css">
+    <link rel="stylesheet" href="./css/playlist.css">
 
-    <!-- Load the Spotify IFrame API Script -->
-    <script src="https://open.spotify.com/embed/iframe-api/v1" async></script>
 
-    <style>
-        /* Custom Dark Mode Styling and Font */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0d121c;
-            /* Slightly deeper dark color for contrast */
-            color: white;
-            padding-bottom: 96px;
-            /* Space for the fixed bottom player (height: 96px) */
-        }
-
-        /* Custom scrollbar styling (optional but improves dark theme look) */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #495057;
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #212529;
-        }
-
-        .song-row:hover {
-            background-color: #212529 !important;
-            /* Slightly lighter hover for visibility */
-        }
-
-        /* Player Bar Styling */
-        .player-bar {
-            height: 96px;
-            background-color: #171b22;
-            /* Darker than body but lighter than container */
-            border-top: 1px solid #212529;
-            z-index: 1030;
-            /* Ensure it stays above everything */
-        }
-
-        /* Custom CSS to hide the track number and show the icon on hover */
-        .track-index {
-            position: relative;
-        }
-
-        .track-play-btn {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
-
-        .song-row:hover .track-index span {
-            opacity: 0;
-        }
-
-        .song-row:hover .track-play-btn {
-            opacity: 1;
-        }
-    </style>
 </head>
 
 <body>
     <header class="navbar">
         <div class="logo">
-            <h1>MelodyApp</h1>
+            <h1>Spooftify</h1>
         </div>
         <nav class="nav-links">
             <a href="index.html">Home</a>
-            <a href="#">Browse</a>
-            <a href="#">Artists</a>
+            <a href="browse.html">Browse</a>
         </nav>
         <nav>
             <button class="auth-btn" style="background-color: var(--medium-gray);"><i class="fas fa-user"></i>
@@ -116,7 +50,7 @@
                         <div>
                             <p class="text-white-50 small fw-semibold text-uppercase mb-0">Playlist</p>
                             <h1 class="display-6 fw-bolder text-white">Top 5 Test Tracks</h1>
-                            <p class="small text-white-50 mb-0">Spooftify | 5 tracks</p>
+                            <p class="small text-white-50 mb-0">Spooftify</p>
                         </div>
                     </div>
                 </header>
@@ -151,151 +85,16 @@
         </div>
     </div>
 
-    <!-- Fixed Bottom Player Bar (Uses Bootstrap utility classes) -->
     <div class="fixed-bottom player-bar d-flex align-items-center px-2 px-md-4">
         <div class="w-100 h-100 d-flex align-items-center" id="spotify-player-container">
             <!-- Spotify Iframe API will inject the player here -->
         </div>
     </div>
+    <script src="./js/jquery.min.js"></script>
+    <script type="text/javascript" src="./js/playlist.js"></script>
+    <script src="https://open.spotify.com/embed/iframe-api/v1" async></script>
 
-    <script type="text/javascript">
 
-        // --- CONSTANTS AND DATA ---
-
-        const DEFAULT_TRACK_ID = '2YZa0dsV3xXGZ61XFYiRt8';
-        let embedController = null;
-        let isPlaying = false;
-
-        // Data structure to create 5 identical placeholder songs
-        const trackData = [
-            { id: DEFAULT_TRACK_ID, name: "Sunset Drive", artist: "Cosmograph, LEVEL NINE", album: "Top Hits 2024", durationMs: 194594 },
-            { id: DEFAULT_TRACK_ID, name: "City Lights", artist: "Aurora Bloom", album: "Neon Echoes", durationMs: 210123 },
-            { id: DEFAULT_TRACK_ID, name: "Midnight Rain", artist: "The Synthetics", album: "Rainy Day Mixtape", durationMs: 185000 },
-            { id: DEFAULT_TRACK_ID, name: "Electric Dream", artist: "Cosmograph", album: "Dreamscape", durationMs: 220000 },
-            { id: DEFAULT_TRACK_ID, name: "Ocean Waves", artist: "LEVEL NINE", album: "Acoustic Retreat", durationMs: 170000 },
-        ];
-
-        // --- HELPER FUNCTIONS ---
-
-        function formatDuration(ms) {
-            const totalSeconds = Math.floor(ms / 1000);
-            const minutes = Math.floor(totalSeconds / 60);
-            const seconds = totalSeconds % 60;
-            return `${minutes}:${seconds.toString().padStart(2, '0')}`;
-        }
-
-        /**
-         * Updates the main play button icon and state
-         * @param {boolean} newIsPlaying 
-         */
-        function updateMainPlayButton(newIsPlaying) {
-            const btn = document.getElementById('main-play-btn');
-            const icon = btn ? btn.querySelector('i') : null;
-            if (!icon) return;
-
-            isPlaying = newIsPlaying;
-            icon.className = isPlaying ? 'bi bi-pause-fill h4 mb-0' : 'bi bi-play-fill h4 mb-0';
-        }
-
-        /**
-         * Loads a new track URI into the single, shared Spotify player.
-         * @param {string} trackId - The Spotify track ID.
-         */
-        function loadNewTrack(trackId) {
-            if (embedController) {
-                const trackUri = `spotify:track:${trackId}`;
-                embedController.loadUri(trackUri).then(() => {
-                    // Start playing immediately after loading
-                    embedController.togglePlay();
-                    updateMainPlayButton(true);
-                    console.log(`Loaded and started playing track: ${trackId}`);
-                });
-            } else {
-                console.error("Player controller not yet initialized.");
-            }
-        }
-
-        // --- UI RENDERING AND EVENTS ---
-
-        function renderPlaylist() {
-            const container = document.getElementById('playlist-container');
-            if (!container) {
-                console.error("Error: Playlist container element not found.");
-                return;
-            }
-
-            container.innerHTML = trackData.map((track, index) => {
-                const escapedTrackName = track.name.replace(/'/g, "\\'");
-
-                return `
-                    <div 
-                        data-id="${track.id}"
-                        onclick="loadNewTrack('${track.id}')"
-                        class="song-row row mx-0 align-items-center py-2 rounded-lg cursor-pointer"
-                    >
-                        <div class="col-1 text-center text-secondary track-index">
-                            <span>${index + 1}</span>
-                            <div class="track-play-btn text-success h5 mb-0">
-                                <i class="bi bi-play-circle-fill"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="col-6 d-flex flex-column min-w-0 pr-4">
-                            <p class="mb-0 text-white fw-semibold text-truncate">${track.name}</p>
-                            <p class="mb-0 small text-secondary">${track.artist}</p>
-                        </div>
-
-                        <div class="col-4 d-none d-sm-block small text-secondary text-truncate">
-                            ${track.album}
-                        </div>
-
-                        <div class="col-1 small text-secondary text-end">
-                            ${formatDuration(track.durationMs)}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // --- SPOTIFY IFRAME API INITIALIZATION ---
-
-        window.onSpotifyIframeApiReady = (IFrameAPI) => {
-            const element = document.getElementById('spotify-player-container');
-            if (!element) return;
-
-            // Options for the single, compact player in the bottom bar
-            const options = {
-                width: '100%',
-                height: '96', // Matches the parent container height
-                uri: `spotify:track:${DEFAULT_TRACK_ID}` // Initial track
-            };
-
-            const callback = (Controller) => {
-                embedController = Controller;
-                console.log("Spotify Embed Controller initialized.");
-
-                // Hook up the main play button to the controller
-                document.getElementById('main-play-btn').addEventListener('click', () => {
-                    Controller.togglePlay().then(() => {
-                        // The togglePlay command is asynchronous; we update the UI immediately
-                        updateMainPlayButton(!isPlaying);
-                    });
-                });
-
-                // Add event listener to track changes in the player state (if available in this API version)
-                // Note: The embed API is often limited, so the main play button relies on our local state (isPlaying)
-            };
-
-            IFrameAPI.createController(element, options, callback);
-        };
-
-        // Initialize UI components
-        document.addEventListener('DOMContentLoaded', () => {
-            renderPlaylist();
-            // Initialize main play button to 'Play' state
-            updateMainPlayButton(false);
-        });
-    </script>
 </body>
 
 </html>

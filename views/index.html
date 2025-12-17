@@ -4,17 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home - Your Library</title>
-    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/global.css">
+    <link rel="stylesheet" href="./css/main.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
 
     <header class="navbar">
-        <div class="logo"><h1>MelodyApp</h1></div>
+        <div class="logo"><h1>Spooftify</h1></div>
         <nav class="nav-links">
             <a href="index.html">Home</a>
-            <a href="#">Browse</a>
-            <a href="#">Artists</a>
+            <a href="browse.html">Browse</a>
         </nav>
         <nav>
             <button class="auth-btn" style="background-color: var(--medium-gray);"><i class="fas fa-user"></i> Profile</button>
@@ -81,22 +81,6 @@
         </section>
     </main>
     
-    <footer class="player-bar" style="background-color: var(--dark-gray); padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #000;">
-        <div class="current-track-info" style="display: flex; align-items: center; gap: 10px;">
-            <div class="album-art" style="width: 50px; height: 50px; border-radius: 4px; background-color: var(--medium-gray);"></div>
-            <div class="track-details">
-                <p style="font-weight: bold;">Not Playing</p>
-                <p style="color: var(--light-gray);">Select a track</p>
-            </div>
-        </div>
-        <div class="controls" style="display: flex; gap: 15px; justify-content: center;">
-            <button style="background: none; border: none; color: var(--text-color); font-size: 1.5em; cursor: pointer;"><i class="fas fa-backward"></i></button>
-            <button style="background: none; border: none; color: var(--text-color); font-size: 1.5em; cursor: pointer;"><i class="fas fa-play"></i></button>
-            <button style="background: none; border: none; color: var(--text-color); font-size: 1.5em; cursor: pointer;"><i class="fas fa-forward"></i></button>
-        </div>
-        <div class="volume-control" style="width: 30%; display: flex; align-items: center; justify-content: flex-end;">
-            <i class="fas fa-volume-up"></i>
-        </div>
-    </footer>
+
 </body>
 </html>
