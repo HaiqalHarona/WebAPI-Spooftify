@@ -49,9 +49,21 @@ a:hover {
     z-index: 10;
 }
 
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
 .logo h1 {
     color: var(--primary-color);
     font-size: 1.8em;
+    margin: 0;
+}
+
+#logo {
+    height: 40px;
+    width: auto;
 }
 
 .nav-links a {
