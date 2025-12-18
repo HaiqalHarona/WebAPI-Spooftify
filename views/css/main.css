@@ -3,7 +3,8 @@
 .search-section {
     display: flex;
     gap: 10px;
-    margin-bottom: 40px;
+    margin: 0 auto 40px;
+    width: 60%;
 }
 
 .search-section input {
@@ -36,6 +37,7 @@
 .card:hover {
     background-color: #333333;
     transform: translateY(-5px);
+    color: white !important;
 }
 
 .card-image {

@@ -21,8 +21,8 @@
             <a href="browse.html">Browse</a>
         </nav>
         <nav>
-            <button class="auth-btn" style="background-color: var(--medium-gray);"><i class="fas fa-user"></i>
-                Profile</button>
+            <a href="profilepage.html" class="auth-btn"
+                style="background-color: var(--medium-gray); text-decoration: none;"><i class="fas fa-user"></i></a>
             <a href="login.html" class="auth-btn">Logout</a>
         </nav>
     </header>
@@ -33,40 +33,11 @@
                 aria-label="Search Spotify content">
             <!-- <button id="search-btn"><i class="fas fa-search"></i> Search</button> -->
         </section>
+        <!-- Search Result Area -->
+        <section>
 
-        <h2>🎵 Your Liked Songs</h2>
-
-        <section id="user-songs-container" class="grid-view">
-            <div class="card">
-                <div class="card-image"></div>
-                <div class="card-info">
-                    <p class="card-title">Song Title One</p>
-                    <p class="card-subtitle">Artist Name</p>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-image"></div>
-                <div class="card-info">
-                    <p class="card-title">Another Hit Track</p>
-                    <p class="card-subtitle">Featured Band</p>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-image"></div>
-                <div class="card-info">
-                    <p class="card-title">Ambient Mix 2024</p>
-                    <p class="card-subtitle">The Producer</p>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-image"></div>
-                <div class="card-info">
-                    <p class="card-title">Coding Soundtrack</p>
-                    <p class="card-subtitle">Project Vibes</p>
-                </div>
-            </div>
         </section>
-
+        <!-- USer's Playlist -->
         <h2 style="margin-top: 50px;">📚 Your Playlists</h2>
 
         <section id="user-playlists-container" class="grid-view">
@@ -87,6 +58,7 @@
         </section>
     </main>
     <script src="./js/jquery.min.js"></script>
+    <script src="./js/const.js"></script>
     <script src="./js/auth.js"></script>
     <script src="./js/main.js"></script>
 

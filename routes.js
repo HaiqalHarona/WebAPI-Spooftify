@@ -8,6 +8,7 @@ const user = require('./service/userservice.js');
 const playlist = require('./service/playlistservice.js');
 const likedSongs = require('./service/likedsongservice.js');
 const crypto = require('crypto');
+const cors = require('cors');
 
 
 db.connect().then(function (response) {
@@ -18,7 +19,8 @@ db.connect().then(function (response) {
 router.use(express.urlencoded({
   extended: true
 }));
-router.use(express.json()); // Add this to parse JSON request bodies
+router.use(express.json());
+router.use(cors()); 
 
 router.use('/api', authenticate);
 

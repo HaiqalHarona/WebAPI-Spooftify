@@ -36,12 +36,12 @@ a {
 }
 
 a:hover {
-    color: #1ED760;
+    color: #000000;
 }
 
 /* --- Navigation & Header (Shared) --- */
 .navbar {
-    background-color: var(--secondary-color);
+    background-color: rgb(42, 44, 42);
     padding: 15px 30px;
     display: flex;
     justify-content: space-between;
@@ -79,7 +79,7 @@ a:hover {
 }
 
 .auth-btn {
-    background-color: var(--primary-color);
+    background-color: var(--primary-color) !important;
     color: var(--text-color);
     border: none;
     padding: 8px 15px;
