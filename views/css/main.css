@@ -16,19 +16,6 @@
     font-size: 1em;
 }
 
-.search-section button {
-    background-color: var(--dark-gray);
-    color: var(--text-color);
-    border: none;
-    padding: 12px 20px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.search-section button:hover {
-    background-color: var(--medium-gray);
-}
 
 /* --- Song/Playlist Grid View --- */
 .grid-view {

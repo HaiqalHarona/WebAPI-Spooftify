@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,28 +9,33 @@
     <link rel="stylesheet" href="./css/main.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
+
 <body>
 
     <header class="navbar">
-        <div class="logo"><h1>Spooftify</h1><img src="./assets/NonCopyRightLogoIthink.png" id="logo"></div>
+        <div class="logo">
+            <h1>Spooftify</h1><img src="./assets/NonCopyRightLogoIthink.png" id="logo">
+        </div>
         <nav class="nav-links">
             <a href="index.html">Home</a>
             <a href="browse.html">Browse</a>
         </nav>
         <nav>
-            <button class="auth-btn" style="background-color: var(--medium-gray);"><i class="fas fa-user"></i> Profile</button>
+            <button class="auth-btn" style="background-color: var(--medium-gray);"><i class="fas fa-user"></i>
+                Profile</button>
             <a href="login.html" class="auth-btn">Logout</a>
         </nav>
     </header>
 
     <main class="container">
         <section class="search-section">
-            <input type="text" id="search-input" placeholder="Search for artists, tracks, or playlists..." aria-label="Search Spotify content">
-            <button id="search-btn"><i class="fas fa-search"></i> Search</button>
+            <input type="text" id="search-input" placeholder="Search for artists, tracks, or playlists..."
+                aria-label="Search Spotify content">
+            <!-- <button id="search-btn"><i class="fas fa-search"></i> Search</button> -->
         </section>
-        
+
         <h2>🎵 Your Liked Songs</h2>
-        
+
         <section id="user-songs-container" class="grid-view">
             <div class="card">
                 <div class="card-image"></div>
@@ -59,10 +65,10 @@
                     <p class="card-subtitle">Project Vibes</p>
                 </div>
             </div>
-            </section>
-        
+        </section>
+
         <h2 style="margin-top: 50px;">📚 Your Playlists</h2>
-        
+
         <section id="user-playlists-container" class="grid-view">
             <a href="playlist.html" class="card">
                 <div class="card-image"></div>
@@ -80,7 +86,12 @@
             </a>
         </section>
     </main>
-    
+    <script src="./js/jquery.min.js"></script>
+    <script src="./js/auth.js"></script>
+    <script src="./js/main.js"></script>
+
+
 
 </body>
+
 </html>

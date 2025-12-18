@@ -26,6 +26,7 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    padding-top: 80px;
 }
 
 a {
@@ -47,6 +48,11 @@ a:hover {
     align-items: center;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
     z-index: 10;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
 }
 
 .logo {

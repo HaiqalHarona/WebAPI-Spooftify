@@ -62,3 +62,17 @@ body {
 .song-row:hover .track-play-btn {
     opacity: 1;
 }
+
+#main-play-btn {
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Override Bootstrap styling for the logo h1 to match other pages */
+.logo h1 {
+    font-size: 1.8em;
+    font-weight: bold;
+}
