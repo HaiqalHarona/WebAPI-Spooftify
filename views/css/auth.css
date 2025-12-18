@@ -17,6 +17,11 @@
     text-align: center;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
+.error-message {
+    color: red;
+    margin-top: 1px;
+}
+
 
 .auth-box h2 {
     color: var(--text-color);
@@ -70,6 +75,14 @@
 
 #registerptag {
     margin-top: 20px;
+}
+.switch-auth-link{
+    color: #1ED760 !important;
+}
+
+
+#registerptag a {
+    color: var(--light-gray);
 }
 
 .password-wrapper {
