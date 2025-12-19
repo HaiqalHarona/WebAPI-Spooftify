@@ -12,6 +12,7 @@ $(function () {
 
     $("#loginform").on("submit", login);
     $("#logoutbutton").on("click", logout);
+    $("#registerform").on("submit", register);
 
 })
 async function login(e) {
@@ -41,16 +42,58 @@ async function login(e) {
     }
 }
 async function logout() {
+
+
     try {
-        await fetch(LOGOUT_URL, {
-            method: 'GET',
+        let response = await fetch(LOGOUT_URL + "?token=" + sessionStorage.token);
+
+        sessionStorage.removeItem("token");
+
+        if (response.ok) {
+            location.href = "login.html";
+        } else {
+            let err = await response.json();
+            console.log(err.message);
+            location.href = "login.html";
+        }
+    } catch (error) {
+        console.error("Error during logout:", error);
+        sessionStorage.removeItem("token");
+        location.href = "login.html";
+    }
+}
+async function register(e) {
+    e.preventDefault();
+    let data = new FormData(e.target);
+    let registerEntries = Object.fromEntries(data.entries());
+
+    // Verify that passwords match
+    if (registerEntries.password !== registerEntries["confirm-password"]) {
+        $("#register-error").text("Passwords do not match");
+        return;
+    }
+
+    delete registerEntries["confirm-password"];
+
+    console.log("Register Payload:", registerEntries);
+
+    try {
+        let response = await fetch(REGISTER_URL, {
+            method: 'POST',
+            body: JSON.stringify(registerEntries),
             headers: {
-                'x-access-token': sessionStorage.token
+                'Content-Type': 'application/json'
             }
         });
+        if (response.ok) {
+            let data = await response.json();
+            location.href = "login.html";
+        } else {
+            let err = await response.json();
+            $("#register-error").text(err.message);
+        }
     } catch (error) {
-        console.error("Logout error:", error);
+        console.error("Registration error:", error);
+        $("#register-error").text("An error occurred. Please try again.");
     }
-    sessionStorage.removeItem('token');
-    window.location.href = "login.html";
 }

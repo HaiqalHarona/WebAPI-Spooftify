@@ -39,7 +39,7 @@ refreshAccessToken().catch(console.error);
 
 const spotifyService = {
   // Search for tracks on Spotify
-  async searchTracks(query, limit = 10) {
+  async searchTracks(query, limit = 20) {
     try {
       const response = await spotifyApi.searchTracks(query, {
         limit: limit,

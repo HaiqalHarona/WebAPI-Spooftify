@@ -63,3 +63,40 @@
     color: var(--light-gray);
     font-size: 0.9em;
 }
+
+/* --- Search Results --- */
+.track-card {
+    position: relative;
+}
+
+.card-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.track-card:hover .card-actions {
+    opacity: 1;
+}
+
+.card-actions button {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    cursor: pointer;
+    font-size: 1.2em;
+    padding: 5px 10px;
+    border-radius: 50%;
+    transition: all 0.2s;
+}
+
+.card-actions button:hover {
+    background-color: var(--primary-color);
+    transform: scale(1.1);
+}
+
+.card-actions .like-btn.liked {
+    color: var(--primary-color);
+}
