@@ -1,4 +1,3 @@
-
 /* --- Main/Index Page Specifics --- */
 .search-section {
     display: flex;
@@ -99,4 +98,16 @@
 
 .card-actions .like-btn.liked {
     color: var(--primary-color);
+}
+
+.btn-like,
+.btn-add-playlist {
+    transition: all 0.3s ease;
+}
+
+.btn-like:hover,
+.btn-add-playlist:hover {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+    border-radius: 50px !important;
 }
