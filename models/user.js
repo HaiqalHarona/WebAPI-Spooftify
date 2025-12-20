@@ -10,7 +10,8 @@ const userSchema = new mongoose.Schema({
     password: String,
     username: String,
     token: String,
-    createdAt: { type: Date, default: Date.now }
+    createdAt: { type: Date, default: Date.now },
+    userpicture: String
 
 })
 module.exports = mongoose.model('users', userSchema);

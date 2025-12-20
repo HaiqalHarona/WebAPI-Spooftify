@@ -21,8 +21,7 @@
             <a href="browse.html">Browse</a>
         </nav>
         <nav>
-            <a href="profilepage.html" class="auth-btn"
-                style="text-decoration: none;"><i class="fas fa-user"></i></a>
+            <a href="profilepage.html" class="auth-btn" style="text-decoration: none;"><i class="fas fa-user"></i></a>
             <a href="login.html" class="auth-btn" name="logout" id="logoutbutton">Logout</a>
         </nav>
     </header>
@@ -33,30 +32,24 @@
                 aria-label="Search Spotify content">
             <!-- <button id="search-btn"><i class="fas fa-search"></i> Search</button> -->
         </section>
-        
+
         <section id="search-results" class="grid-view">
-        <!-- Search Result Area -->
+            <!-- Search Result Area -->
         </section>
         <!-- USer's Playlist -->
         <h2 style="margin-top: 50px;">📚 Your Playlists</h2>
 
-        <section id="user-playlists-container" class="grid-view">
-            <a href="playlist.html" class="card">
-                <div class="card-image"></div>
+        <section id="user-playlists-container" class="grid-view" style="justify-content: center;">
+            <a href="likedsongs.html" class="card">
+                <div class="card-image" style="background: linear-gradient(135deg, #450af5, #c4efd9); display: flex; justify-content: center; align-items: center;"><img src="./assets/heart-organ.png" style="width: 60px; height: 60px; filter: brightness(0) invert(1);"></div>
                 <div class="card-info">
-                    <p class="card-title">Chill Hits</p>
-                    <p class="card-subtitle">50 tracks</p>
-                </div>
-            </a>
-            <a href="playlist.html" class="card">
-                <div class="card-image"></div>
-                <div class="card-info">
-                    <p class="card-title">Workout Mix</p>
-                    <p class="card-subtitle">80 tracks</p>
+                    <p class="card-title">Liked Songs</p>
+                    <p class="card-subtitle">Your Liked Songs</p>
                 </div>
             </a>
         </section>
     </main>
+    
     <script src="./js/jquery.min.js"></script>
     <script src="./js/const.js"></script>
     <script src="./js/auth.js"></script>

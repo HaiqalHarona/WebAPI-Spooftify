@@ -16,6 +16,7 @@ const playlistSchema = new mongoose.Schema({
         durationMs: Number,
         albumImage: String 
     }],
-    createdAt: { type: Date, default: Date.now }
+    createdAt: { type: Date, default: Date.now },
+    playlistpicture: String
 });
 module.exports = mongoose.model('playlists', playlistSchema);

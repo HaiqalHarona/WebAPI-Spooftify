@@ -1,4 +1,4 @@
-$(function () {
+$(async function () {
     // Search functionality
     const searchInput = $("#search-input");
 
@@ -34,6 +34,14 @@ $(function () {
     }
 
     $("body").on("click", ".close-modal", () => $("#playlist-modal").hide());
+
+    let response = await fetch(PLAYLISTS_URL + "?token=" + sessionStorage.token);
+    if (response.ok) {
+        let data = await response.json();
+        if (data.success) {
+            displayPlaylists(data.playlists);
+        }
+    }
 });
 
 async function searchTracks(query) {
@@ -116,4 +124,31 @@ async function openPlaylistModal(trackId) {
     }
 
     modal.css("display", "flex");
+}
+
+function displayPlaylists(playlists) {
+    const container = $("#user-playlists-container");
+
+    if (playlists.length === 0) {
+        return;
+    }
+
+    playlists.forEach(function(playlist) {
+        let image = playlist.playlistpicture;
+        if (!image && playlist.tracks && playlist.tracks.length > 0) {
+            image = playlist.tracks[0].albumImage;
+        }
+        image = image || "./assets/default-album.png";
+
+        const card = $(`
+            <a href="playlist.html?id=${playlist._id}" class="card playlist-card">
+                <div class="card-image" style="background-image: url('${image}'); background-size: cover; background-position: center;"></div>
+                <div class="card-info">
+                    <p class="card-title">${playlist.name}</p>
+                    <p class="card-subtitle">${playlist.tracks ? playlist.tracks.length : 0} Tracks</p>
+                </div>
+            </a>
+        `);
+        container.append(card);
+    });
 }
