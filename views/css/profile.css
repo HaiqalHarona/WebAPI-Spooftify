@@ -57,8 +57,8 @@
 .save-btn {
     width: 100%;
     padding: 14px;
-    background-color: var(--spotify-green);
-    color: black;
+    background-color: #1ed760;
+    color: rgb(255, 255, 255);
     border: none;
     border-radius: 50px;
     font-size: 1rem;
@@ -70,7 +70,7 @@
 
 .save-btn:hover {
     transform: scale(1.02);
-    background-color: #1ed760;
+    background-color: #2d9c54;
 }
 
 .message-area {

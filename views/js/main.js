@@ -19,17 +19,19 @@ $(function () {
     });
 
     // Event listeners for track actions
-    $("#search-results").on("click", ".btn-like", function (e) {
-        e.stopPropagation();
-        const trackId = $(this).closest(".track-card").data("track-id");
 
-    });
-
-    $("#search-results").on("click", ".btn-add-playlist", function (e) {
-        e.stopPropagation();
-        const trackId = $(this).closest(".track-card").data("track-id");
-        openPlaylistModal(trackId);
-    });
+    if ($("#search-results").length) {
+        $("#search-results").on("click", ".btn-add-playlist", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            // console.log("Add to playlist button clicked!"); Debug
+            const trackId = $(this).closest(".track-card").data("track-id");
+            // console.log("Track ID from data attribute:", trackId);  Debug
+            openPlaylistModal(trackId);
+        });
+    } else {
+        console.error("#search-results element not found!");
+    }
 
     $("body").on("click", ".close-modal", () => $("#playlist-modal").hide());
 });
@@ -97,13 +99,13 @@ async function openPlaylistModal(trackId) {
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Select Playlist</h5>
-                            <button type="button" class="btn-close close-modal" aria-label="Close"></button>
+                            <button type="button" class="btn-close close-modal" aria-label="Close" style="border: none; background: none; font-size: 1.5rem;">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
                         </div>
                         <div class="modal-body">
                             <div id="modal-playlists-list" class="list-group">
-                                <button type="button" class="list-group-item list-group-item-action">My Favorites</button>
-                                <button type="button" class="list-group-item list-group-item-action">Chill Vibes</button>
-                                <button type="button" class="list-group-item list-group-item-action">Workout</button>
+                                <button type="button" class="list-group-item list-group-item-action">Placeholder One</button>
                             </div>
                         </div>
                     </div>
@@ -113,5 +115,5 @@ async function openPlaylistModal(trackId) {
         modal = $("#playlist-modal");
     }
 
-    modal.show();
+    modal.css("display", "flex");
 }
