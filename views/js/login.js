@@ -1,10 +1,28 @@
-function togglePassword(inputId, icon) {
-    const input = document.getElementById(inputId);
-    if (input.type === "password") {
-        input.type = "text";
-        icon.classList.replace("fa-eye", "fa-eye-slash");
+const loginForm = document.getElementById('login-form');
+
+loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const email = loginForm.email.value;
+    const password = loginForm.password.value;
+
+    const response = await fetch('/users/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            email,
+            password
+        })
+    });
+
+    if (response.ok) {
+        const data = await response.json();
+        sessionStorage.setItem('token', data.token);
+        window.location.href = 'index.html';
     } else {
-        input.type = "password";
-        icon.classList.replace("fa-eye-slash", "fa-eye");
+        const data = await response.json();
+        alert(data.message);
     }
-}
+});

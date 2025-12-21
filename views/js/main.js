@@ -16,6 +16,32 @@ $(async function () {
                 $("#search-results").empty();
             }
         }, 300);
+
+    });
+
+
+    // FAB Design
+    $(function () {
+        const $fab = $('#fabButton');
+        const $menu = $('#fabOptions');
+
+        // Toggle menu
+        $fab.click(function (e) {
+            e.stopPropagation();
+            $(this).toggleClass('active');
+            $menu.toggleClass('active');
+        });
+
+        // Close when clicking outside
+        $(document).click(function () {
+            $fab.removeClass('active');
+            $menu.removeClass('active');
+        });
+
+        // Don't close when clicking inside menu
+        $menu.click(function (e) {
+            e.stopPropagation();
+        });
     });
 
     // Event listeners for track actions
@@ -33,7 +59,16 @@ $(async function () {
         console.error("#search-results element not found!");
     }
 
-    $("body").on("click", ".close-modal", () => $("#playlist-modal").hide());
+    $("body").on("click", ".close-modal", () => {
+        $("#playlist-modal").hide();
+        $("#create-playlist-modal").hide();
+    });
+
+    $("#addoption").on("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        openCreatePlaylistModal();
+    });
 
     let response = await fetch(PLAYLISTS_URL + "?token=" + sessionStorage.token);
     if (response.ok) {
@@ -129,11 +164,14 @@ async function openPlaylistModal(trackId) {
 function displayPlaylists(playlists) {
     const container = $("#user-playlists-container");
 
+    // Clear existing playlists except the liked songs card
+    container.find(".playlist-card").remove();
+
     if (playlists.length === 0) {
         return;
     }
 
-    playlists.forEach(function(playlist) {
+    playlists.forEach(function (playlist) {
         let image = playlist.playlistpicture;
         if (!image && playlist.tracks && playlist.tracks.length > 0) {
             image = playlist.tracks[0].albumImage;
@@ -141,7 +179,7 @@ function displayPlaylists(playlists) {
         image = image || "./assets/default-album.png";
 
         const card = $(`
-            <a href="playlist.html?id=${playlist._id}" class="card playlist-card">
+            <a href="playlist.html?id=${playlist._id}" class="card playlist-card" style="width: 200px;">
                 <div class="card-image" style="background-image: url('${image}'); background-size: cover; background-position: center;"></div>
                 <div class="card-info">
                     <p class="card-title">${playlist.name}</p>
@@ -151,4 +189,72 @@ function displayPlaylists(playlists) {
         `);
         container.append(card);
     });
+}
+
+function openCreatePlaylistModal() {
+    let modal = $("#create-playlist-modal");
+
+    if (modal.length === 0) {
+        $("body").append(`
+            <div id="create-playlist-modal" class="modal" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Create Playlist</h5>
+                            <button type="button" class="btn-close close-modal" aria-label="Close" style="border: none; background: none; font-size: 1.5rem;">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="create-playlist-form">
+                                <div class="mb-3">
+                                    <label for="playlist-name" class="form-label">Playlist Name</label>
+                                    <input type="text" class="form-control" id="playlist-name" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Create</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `);
+        modal = $("#create-playlist-modal");
+
+        $("#create-playlist-form").on("submit", async function (e) {
+            e.preventDefault();
+            const playlistName = $("#playlist-name").val();
+            if (playlistName) {
+                await createPlaylist(playlistName);
+                modal.hide();
+            }
+        });
+    }
+
+    modal.css("display", "flex");
+}
+
+async function createPlaylist(name) {
+    try {
+        const response = await fetch(PLAYLISTS_URL + '/create', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ name: name, token: sessionStorage.token })
+        });
+
+        if (response.ok) {
+            let response = await fetch(PLAYLISTS_URL + "?token=" + sessionStorage.token);
+            if (response.ok) {
+                let data = await response.json();
+                if (data.success) {
+                    displayPlaylists(data.playlists);
+                }
+            }
+        } else {
+            console.error("Failed to create playlist:", await response.json());
+        }
+    } catch (error) {
+        console.error("Error creating playlist:", error);
+    }
 }

@@ -28,7 +28,8 @@
             <a href="browse.html">Browse</a>
         </nav>
         <nav>
-            <a href="profilepage.html" class="auth-btn" style="background-color: var(--medium-gray); text-decoration: none;"><i class="fas fa-user"></i></a>
+            <a href="profilepage.html" class="auth-btn"
+                style="background-color: var(--medium-gray); text-decoration: none;"><i class="fas fa-user"></i></a>
             <a href="login.html" class="auth-btn">Logout</a>
         </nav>
     </header>
@@ -36,6 +37,10 @@
     <div class="container-fluid pt-4 pb-4">
         <div class="row justify-content-center">
             <div class="col-12 col-md-10 col-lg-8">
+                <!-- Search Bar -->
+                <div class="mb-4">
+                    <input type="text" id="search-bar" class="form-control" placeholder="Search in playlist...">
+                </div>
 
                 <!-- Playlist Header Section -->
                 <header class="bg-dark p-4 rounded-xl shadow-lg mb-4">
@@ -48,19 +53,19 @@
 
                         <div>
                             <p class="text-white-50 small fw-semibold text-uppercase mb-0">Playlist</p>
-                            <h1 class="display-6 fw-bolder text-white">Top 5 Test Tracks</h1>
-                            <p class="small text-white-50 mb-0">Spooftify</p>
+                            <h1 class="display-6 fw-bolder text-white">My Playlist</h1>
+                            <p class="small text-white-50 mb-0">Your personalized playlist</p>
                         </div>
                     </div>
                 </header>
 
                 <!-- Playback Button Row -->
                 <div class="d-flex align-items-center mb-4">
-                    <button id="main-play-btn" class="btn btn-success rounded-circle shadow-lg me-3"
-                        title="Play/Pause">
+                    <button id="main-play-btn" class="btn btn-success rounded-circle shadow-lg me-3" title="Play/Pause">
                         <i class="bi bi-play-fill h4 mb-0"></i>
                     </button>
                 </div>
+
 
                 <!-- Playlist Details Header -->
                 <div

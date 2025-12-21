@@ -76,3 +76,11 @@ body {
     font-size: 1.8em;
     font-weight: bold;
 }
+#search-bar {
+    width: 50%;
+    background-color: #3a3a3a;
+    color: white;
+}
+#search-bar::placeholder {
+    color: white;
+}

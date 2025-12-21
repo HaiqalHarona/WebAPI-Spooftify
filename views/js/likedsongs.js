@@ -49,14 +49,14 @@
 
         // --- UI RENDERING AND EVENTS ---
 
-        function renderPlaylist() {
+        function renderPlaylist(tracks) {
             const container = document.getElementById('playlist-container');
             if (!container) {
                 console.error("Error: Playlist container element not found.");
                 return;
             }
 
-            container.innerHTML = trackData.map((track, index) => {
+            container.innerHTML = tracks.map((track, index) => {
                 const escapedTrackName = track.name.replace(/'/g, "\\'");
 
                 return `
@@ -87,6 +87,10 @@
                     </div>
                 `;
             }).join('');
+        }
+
+        function renderFullPlaylist() {
+            renderPlaylist(trackData);
         }
 
         // --- SPOTIFY IFRAME API INITIALIZATION ---
@@ -122,7 +126,22 @@
 
         // Initialize UI components
         document.addEventListener('DOMContentLoaded', () => {
-            renderPlaylist();
+            renderFullPlaylist();
             // Initialize main play button to 'Play' state
             updateMainPlayButton(false);
+
+            const searchBar = document.getElementById('search-bar');
+            searchBar.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                if (searchTerm === '') {
+                    renderFullPlaylist();
+                    return;
+                }
+                const filteredTracks = trackData.filter(track => {
+                    return track.name.toLowerCase().includes(searchTerm) ||
+                           track.artist.toLowerCase().includes(searchTerm) ||
+                           track.album.toLowerCase().includes(searchTerm);
+                });
+                renderPlaylist(filteredTracks);
+            });
         });

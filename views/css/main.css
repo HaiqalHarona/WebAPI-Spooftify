@@ -228,3 +228,205 @@
     background: var(--primary-color, #1db954);
     border-radius: 3px;
 }
+
+/* FAB Styles - Bottom Right with Dropup */
+.fab-container {
+    position: fixed;
+    bottom: 50px;
+    right: 50px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.fab-button {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    border: none;
+    border-radius: 50%;
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 1001;
+    position: relative;
+    outline: none;
+}
+
+.fab-button:hover {
+    background: linear-gradient(135deg, #45a049, #3d8b40);
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+}
+
+.fab-button:active {
+    transform: scale(0.95);
+}
+
+.fab-button.active {
+    background: linear-gradient(135deg, #f44336, #d32f2f);
+    transform: rotate(45deg);
+}
+
+.fab-button.active:hover {
+    background: linear-gradient(135deg, #d32f2f, #c62828);
+    transform: rotate(45deg) scale(1.1);
+}
+
+/* FAB Options - Dropup (appears ABOVE the button) */
+.fab-options {
+    display: flex;
+    flex-direction: column-reverse;
+    /* Reverse so first option is closest to button */
+    gap: 15px;
+    margin-bottom: 15px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    pointer-events: none;
+    position: absolute;
+    bottom: 70px;
+    /* Position above the button */
+    right: 0;
+}
+
+.fab-options.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: all;
+}
+
+.fab-option {
+    width: 50px;
+    height: 50px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
+    color: #333;
+    position: relative;
+    transition: all 0.3s ease;
+    transform: scale(0.8);
+    opacity: 0;
+}
+
+.fab-options.active .fab-option {
+    transform: scale(1);
+    opacity: 1;
+}
+
+.fab-options.active .fab-option:nth-child(2) {
+    transition-delay: 0.1s;
+}
+
+.fab-options.active .fab-option:nth-child(1) {
+    transition-delay: 0.1s;
+}
+
+.fab-option:hover {
+    transform: scale(1.15) !important;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    color: #4CAF50;
+}
+
+.fab-option svg {
+    width: 22px;
+    height: 22px;
+}
+
+.fab-option:nth-child(1) svg {
+    color: #2196F3;
+}
+
+.fab-option:nth-child(2) svg {
+    color: #FF9800;
+}
+
+/* Tooltip - Positioned to the left for dropup */
+.fab-tooltip {
+    position: absolute;
+    right: 60px;
+    background: #333;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.fab-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: -5px;
+    transform: translateY(-50%);
+    border-width: 5px 0 5px 5px;
+    border-style: solid;
+    border-color: transparent transparent transparent #333;
+}
+
+.fab-option:hover .fab-tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-5px);
+}
+
+/* Alternative: True bottom-right corner (against edges) */
+.fab-container.bottom-right-corner {
+    bottom: 0;
+    right: 0;
+    margin: 20px;
+}
+
+.fab-container.bottom-right-corner .fab-button {
+    margin: 0;
+}
+
+.fab-container.bottom-right-corner .fab-options {
+    bottom: 80px;
+    /* Adjust for margin */
+    right: 0;
+}
+
+/* Alternative: Bottom-right with no spacing */
+.fab-container.bottom-right-tight {
+    bottom: 10px;
+    right: 10px;
+    margin: 0;
+}
+
+.fab-container.bottom-right-tight .fab-options {
+    bottom: 65px;
+    right: 0;
+}
+
+
+.fab-button:focus-visible,
+.fab-option:focus-visible {
+    outline: 2px solid #4CAF50;
+    outline-offset: 2px;
+}
+
+.fab-button:focus:not(:focus-visible) {
+    outline: none;
+}
+
+
+

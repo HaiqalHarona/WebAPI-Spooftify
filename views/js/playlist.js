@@ -1,11 +1,9 @@
 
-        // --- CONSTANTS AND DATA ---
 
         const DEFAULT_TRACK_ID = '2YZa0dsV3xXGZ61XFYiRt8';
         let embedController = null;
         let isPlaying = false;
 
-        // Data structure to create 5 identical placeholder songs
         const trackData = [
             { id: DEFAULT_TRACK_ID, name: "Sunset Drive", artist: "Cosmograph, LEVEL NINE", album: "Top Hits 2024", durationMs: 194594 },
             { id: DEFAULT_TRACK_ID, name: "City Lights", artist: "Aurora Bloom", album: "Neon Echoes", durationMs: 210123 },
@@ -14,7 +12,6 @@
             { id: DEFAULT_TRACK_ID, name: "Ocean Waves", artist: "LEVEL NINE", album: "Acoustic Retreat", durationMs: 170000 },
         ];
 
-        // --- HELPER FUNCTIONS ---
 
         function formatDuration(ms) {
             const totalSeconds = Math.floor(ms / 1000);
@@ -47,16 +44,15 @@
             }
         }
 
-        // --- UI RENDERING AND EVENTS ---
 
-        function renderPlaylist() {
+        function renderPlaylist(tracks) {
             const container = document.getElementById('playlist-container');
             if (!container) {
                 console.error("Error: Playlist container element not found.");
                 return;
             }
 
-            container.innerHTML = trackData.map((track, index) => {
+            container.innerHTML = tracks.map((track, index) => {
                 const escapedTrackName = track.name.replace(/'/g, "\\'");
 
                 return `
@@ -89,7 +85,10 @@
             }).join('');
         }
 
-        // --- SPOTIFY IFRAME API INITIALIZATION ---
+        function renderFullPlaylist() {
+            renderPlaylist(trackData);
+        }
+
 
         window.onSpotifyIframeApiReady = (IFrameAPI) => {
             const element = document.getElementById('spotify-player-container');
@@ -122,7 +121,22 @@
 
         // Initialize UI components
         document.addEventListener('DOMContentLoaded', () => {
-            renderPlaylist();
+            renderFullPlaylist();
             // Initialize main play button to 'Play' state
             updateMainPlayButton(false);
+
+            const searchBar = document.getElementById('search-bar');
+            searchBar.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                if (searchTerm === '') {
+                    renderFullPlaylist();
+                    return;
+                }
+                const filteredTracks = trackData.filter(track => {
+                    return track.name.toLowerCase().includes(searchTerm) ||
+                           track.artist.toLowerCase().includes(searchTerm) ||
+                           track.album.toLowerCase().includes(searchTerm);
+                });
+                renderPlaylist(filteredTracks);
+            });
         });
