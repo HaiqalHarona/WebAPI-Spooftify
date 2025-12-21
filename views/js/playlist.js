@@ -1,16 +1,52 @@
 
 
-        const DEFAULT_TRACK_ID = '2YZa0dsV3xXGZ61XFYiRt8';
+        const urlParams = new URLSearchParams(window.location.search);
+        const playlistId = urlParams.get('id');
+        // console.log("Debug - URL Search:", window.location.search);
+        // console.log("Debug - Playlist ID:", playlistId);
+
         let embedController = null;
         let isPlaying = false;
+        let trackData = []; 
+        let iFrameAPI = null;
 
-        const trackData = [
-            { id: DEFAULT_TRACK_ID, name: "Sunset Drive", artist: "Cosmograph, LEVEL NINE", album: "Top Hits 2024", durationMs: 194594 },
-            { id: DEFAULT_TRACK_ID, name: "City Lights", artist: "Aurora Bloom", album: "Neon Echoes", durationMs: 210123 },
-            { id: DEFAULT_TRACK_ID, name: "Midnight Rain", artist: "The Synthetics", album: "Rainy Day Mixtape", durationMs: 185000 },
-            { id: DEFAULT_TRACK_ID, name: "Electric Dream", artist: "Cosmograph", album: "Dreamscape", durationMs: 220000 },
-            { id: DEFAULT_TRACK_ID, name: "Ocean Waves", artist: "LEVEL NINE", album: "Acoustic Retreat", durationMs: 170000 },
-        ];
+        $(async function () {
+            if (!playlistId) {
+                $('#playlist-container').html('<p class="text-white">Error: No Playlist ID provided.</p>');
+                return;
+            }
+            const url = `${PLAYLISTS_URL}/${playlistId}/tracks?token=${sessionStorage.token}`;
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || `Error fetching playlist: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                if (data.success && data.tracks) {
+                    trackData = data.tracks.map(track => ({
+                        id: track.spotifyTrackId,
+                        name: track.name,
+                        artist: track.artist,
+                        album: track.album,
+                        durationMs: track.durationMs
+                    }));
+                    renderPlaylist(trackData);
+                    // Initialize player with the first track if API is ready
+                    if (iFrameAPI && !embedController && trackData.length > 0) {
+                        initSpotifyPlayer(trackData[0].id);
+                    }
+                } else {
+                    throw new Error(data.message || 'Could not retrieve tracks for the playlist.');
+                }
+            } catch (error) {
+                console.error('Failed to load playlist:', error);
+                $('#playlist-container').html(`<p class="text-danger">Error: ${error.message}</p>`);
+            }
+        });
+
+
 
 
         function formatDuration(ms) {
@@ -21,23 +57,21 @@
         }
 
 
-        function updateMainPlayButton(newIsPlaying) {
-            const btn = $('#main-play-btn');
-            const icon = btn.find('i');
-            if (icon.length === 0) return;
-
-            isPlaying = newIsPlaying;
-            icon.attr('class', isPlaying ? 'bi bi-pause-fill h4 mb-0' : 'bi bi-play-fill h4 mb-0');
-        }
-
         function loadNewTrack(trackId) {
+            // console.log("Debug - Clicked Track ID:", trackId);
+            // if (!trackId || trackId === 'undefined') {
+            //     console.error("Error: Invalid Track ID");
+            //     return;
+            // }
             if (embedController) {
                 const trackUri = `spotify:track:${trackId}`;
+                console.log("Debug - Loading URI:", trackUri);
                 embedController.loadUri(trackUri).then(() => {
                     // Start playing immediately after loading
                     embedController.togglePlay();
-                    updateMainPlayButton(true);
                     console.log(`Loaded and started playing track: ${trackId}`);
+                }).catch(error => {
+                    console.error("Error loading track in Spotify player:", error);
                 });
             } else {
                 console.error("Player controller not yet initialized.");
@@ -53,7 +87,6 @@
             }
 
             container.html(tracks.map((track, index) => {
-                const escapedTrackName = track.name.replace(/'/g, "\\'");
 
                 return `
                     <div 
@@ -90,43 +123,40 @@
 
 
         window.onSpotifyIframeApiReady = (IFrameAPI) => {
-            const element = $('#spotify-player-container')[0];
-            if (!element) return;
+            iFrameAPI = IFrameAPI;
+            // Initialize player if tracks are already loaded
+            if (trackData.length > 0 && !embedController) {
+                initSpotifyPlayer(trackData[0].id);
+            }
+        };
 
-            // Options for the single, compact player in the bottom bar
+        function initSpotifyPlayer(firstTrackId) {
+            const element = $('#spotify-player-container')[0];
+            if (!element || !iFrameAPI) return;
+
             const options = {
                 width: '100%',
-                height: '96', // Matches the parent container height
-                uri: `spotify:track:${DEFAULT_TRACK_ID}` // Initial track
+                height: '96',
+                uri: `spotify:track:${firstTrackId}`
             };
 
             const callback = (Controller) => {
                 embedController = Controller;
                 console.log("Spotify Embed Controller initialized.");
-
-                // Hook up the main play button to the controller
-                $('#main-play-btn').on('click', () => {
-                    Controller.togglePlay().then(() => {
-                        // The togglePlay command is asynchronous; we update the UI immediately
-                        updateMainPlayButton(!isPlaying);
-                    });
-                });
-
-
             };
 
-            IFrameAPI.createController(element, options, callback);
-        };
+            iFrameAPI.createController(element, options, callback);
+        }
 
         // Initialize UI components
         $(function () {
-            renderFullPlaylist();
-            // Initialize main play button to 'Play' state
-            updateMainPlayButton(false);
+            if (playlistId) {
+                console.log(`Playlist ID passed: ${playlistId}`);
+            }
 
-            // Event delegation for song rows
             $('#playlist-container').on('click', '.song-row', function () {
-                loadNewTrack($(this).data('id'));
+                const trackId = $(this).attr('data-id');
+                loadNewTrack(trackId);
             });
 
             const searchBar = $('#search-bar');
