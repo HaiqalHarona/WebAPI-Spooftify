@@ -137,7 +137,7 @@ async function openPlaylistModal(trackId) {
 
     if (modal.length === 0) {
         $("body").append(`
-            <div id="playlist-modal" class="modal" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+            <div id="playlist-modal" class="modal" tabindex="-1" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1050; background-color: rgba(0,0,0,0.5); justify-content: center; align-items: center;">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -196,7 +196,7 @@ function openCreatePlaylistModal() {
 
     if (modal.length === 0) {
         $("body").append(`
-            <div id="create-playlist-modal" class="modal" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+            <div id="create-playlist-modal" class="modal" tabindex="-1" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1050; background-color: rgba(0,0,0,0.5); justify-content: center; align-items: center;">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">

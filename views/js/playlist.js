@@ -22,12 +22,12 @@
 
 
         function updateMainPlayButton(newIsPlaying) {
-            const btn = document.getElementById('main-play-btn');
-            const icon = btn ? btn.querySelector('i') : null;
-            if (!icon) return;
+            const btn = $('#main-play-btn');
+            const icon = btn.find('i');
+            if (icon.length === 0) return;
 
             isPlaying = newIsPlaying;
-            icon.className = isPlaying ? 'bi bi-pause-fill h4 mb-0' : 'bi bi-play-fill h4 mb-0';
+            icon.attr('class', isPlaying ? 'bi bi-pause-fill h4 mb-0' : 'bi bi-play-fill h4 mb-0');
         }
 
         function loadNewTrack(trackId) {
@@ -46,19 +46,18 @@
 
 
         function renderPlaylist(tracks) {
-            const container = document.getElementById('playlist-container');
-            if (!container) {
+            const container = $('#playlist-container');
+            if (container.length === 0) {
                 console.error("Error: Playlist container element not found.");
                 return;
             }
 
-            container.innerHTML = tracks.map((track, index) => {
+            container.html(tracks.map((track, index) => {
                 const escapedTrackName = track.name.replace(/'/g, "\\'");
 
                 return `
                     <div 
                         data-id="${track.id}"
-                        onclick="loadNewTrack('${track.id}')"
                         class="song-row row mx-0 align-items-center py-2 rounded-lg cursor-pointer"
                     >
                         <div class="col-1 text-center text-secondary track-index">
@@ -82,7 +81,7 @@
                         </div>
                     </div>
                 `;
-            }).join('');
+            }).join(''));
         }
 
         function renderFullPlaylist() {
@@ -91,7 +90,7 @@
 
 
         window.onSpotifyIframeApiReady = (IFrameAPI) => {
-            const element = document.getElementById('spotify-player-container');
+            const element = $('#spotify-player-container')[0];
             if (!element) return;
 
             // Options for the single, compact player in the bottom bar
@@ -106,7 +105,7 @@
                 console.log("Spotify Embed Controller initialized.");
 
                 // Hook up the main play button to the controller
-                document.getElementById('main-play-btn').addEventListener('click', () => {
+                $('#main-play-btn').on('click', () => {
                     Controller.togglePlay().then(() => {
                         // The togglePlay command is asynchronous; we update the UI immediately
                         updateMainPlayButton(!isPlaying);
@@ -120,14 +119,19 @@
         };
 
         // Initialize UI components
-        document.addEventListener('DOMContentLoaded', () => {
+        $(function () {
             renderFullPlaylist();
             // Initialize main play button to 'Play' state
             updateMainPlayButton(false);
 
-            const searchBar = document.getElementById('search-bar');
-            searchBar.addEventListener('input', (e) => {
-                const searchTerm = e.target.value.toLowerCase();
+            // Event delegation for song rows
+            $('#playlist-container').on('click', '.song-row', function () {
+                loadNewTrack($(this).data('id'));
+            });
+
+            const searchBar = $('#search-bar');
+            searchBar.on('input', function () {
+                const searchTerm = $(this).val().toLowerCase();
                 if (searchTerm === '') {
                     renderFullPlaylist();
                     return;
