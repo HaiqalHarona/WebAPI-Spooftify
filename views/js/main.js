@@ -79,6 +79,10 @@ $(async function () {
     }
 });
 
+async function openPlaylistModal(trackId) {
+    
+}
+
 async function searchTracks(query) {
     try {
         const response = await fetch(SEARCH_URL + "?q=" + query + "&token=" + sessionStorage.token, {
