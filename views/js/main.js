@@ -79,10 +79,6 @@ $(async function () {
     }
 });
 
-async function openPlaylistModal(trackId) {
-    
-}
-
 async function searchTracks(query) {
     try {
         const response = await fetch(SEARCH_URL + "?q=" + query + "&token=" + sessionStorage.token, {
@@ -138,7 +134,6 @@ function displaySearchResults(tracks) {
 async function openPlaylistModal(trackId) {
     let modal = $("#playlist-modal");
 
-
     if (modal.length === 0) {
         $("body").append(`
             <div id="playlist-modal" class="modal" tabindex="-1" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1050; background-color: rgba(0,0,0,0.5); justify-content: center; align-items: center;">
@@ -163,6 +158,61 @@ async function openPlaylistModal(trackId) {
     }
 
     modal.css("display", "flex");
+
+    const playlistContainer = $("#modal-playlists-list");
+    playlistContainer.html("<p class='text-white'>Loading...</p>");
+
+    try {
+        const response = await fetch(PLAYLISTS_URL + "?token=" + sessionStorage.token);
+        if (response.ok) {
+            const data = await response.json();
+            playlistContainer.empty();
+            if (data.success && data.playlists && data.playlists.length > 0) {
+                data.playlists.forEach(playlist => {
+                    const ListItemBtn = $(`<button type="button" class="list-group-item list-group-item-action">${playlist.name}</button>`);
+                    ListItemBtn.on("click", async function () {
+                        await addTrackToPlaylist(trackId, playlist._id);
+                        modal.hide();
+                    });
+
+                    playlistContainer.append(ListItemBtn);
+
+                })
+            } else {
+                playlistContainer.append("<p>No playlists found.</p>");
+            }
+
+
+        } else {
+            playlistContainer.html("<p>Failed loading playlists.</p>");
+        }
+
+    } catch (error) {
+        console.error("Error loading playlists:", error);
+        playlistContainer.html("<p>Error loading playlists.</p>");
+
+    }
+}
+
+async function addTrackToPlaylist(trackId, playlistId) {
+
+    try {
+        const response = await fetch(`${PLAYLISTS_URL}/${playlistId}/add`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ spotifyTrackId: trackId })
+        });
+        const data = await response.json();
+        if (response.ok && data.success) {
+            alert("Track added to playlist successfully!");
+        } else {
+            alert("Failed to add track to playlist.");
+        }
+    } catch (error){
+        console.error("Error adding track to playlist:", error);
+        alert("Error adding track to playlist.");
+    }
+    
 }
 
 function displayPlaylists(playlists) {
