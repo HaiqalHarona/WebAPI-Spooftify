@@ -513,3 +513,26 @@
     background-color: #1ed760;
     transform: scale(1.05);
 }
+
+/* Delete Button Styles */
+.btn-danger {
+    background-color: #e91429;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 8px 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 14px;
+}
+
+.btn-danger:hover {
+    background-color: #c41222;
+    transform: scale(1.05);
+}
+
+.btn-sm {
+    padding: 5px 12px;
+    font-size: 12px;
+}
