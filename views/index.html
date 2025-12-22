@@ -18,7 +18,6 @@
         </div>
         <nav class="nav-links">
             <a href="index.html">Home</a>
-            <a href="browse.html">Browse</a>
         </nav>
         <nav>
             <a href="profilepage.html" class="auth-btn" style="text-decoration: none;"><i class="fas fa-user"></i></a>
@@ -39,7 +38,8 @@
         <!-- USer's Playlist -->
         <h2 style="margin-top: 50px; text-align: center;">📚 Your Playlists</h2>
 
-        <section id="user-playlists-container" class="grid-view" style="display: flex; justify-content: center; flex-wrap: wrap; gap: 20px;">
+        <section id="user-playlists-container" class="grid-view"
+            style="display: flex; justify-content: center; flex-wrap: wrap; gap: 20px;">
             <a href="likedsongs.html" class="card" style="width: 200px;">
                 <div class="card-image"
                     style="background: linear-gradient(135deg, #450af5, #c4efd9); display: flex; justify-content: center; align-items: center;">
@@ -69,7 +69,15 @@
             </a>
             <a class="fab-option" id="editoption">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="White"
-                    class="bi bi-pencil-square" viewBox="0 0 16 16">
+                    class="bi bi-folder-minus" viewBox="0 0 16 16">
+                    <path
+                        d="m.5 3 .04.87a2 2 0 0 0-.342 1.311l.637 7A2 2 0 0 0 2.826 14H9v-1H2.826a1 1 0 0 1-.995-.91l-.637-7A1 1 0 0 1 2.19 4h11.62a1 1 0 0 1 .996 1.09L14.54 8h1.005l.256-2.819A2 2 0 0 0 13.81 3H9.828a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 6.172 1H2.5a2 2 0 0 0-2 2m5.672-1a1 1 0 0 1 .707.293L7.586 3H2.19q-.362.002-.683.12L1.5 2.98a1 1 0 0 1 1-.98z" />
+                    <path d="M11 11.5a.5.5 0 0 1 .5-.5h4a.5.5 0 1 1 0 1h-4a.5.5 0 0 1-.5-.5" />
+                </svg><span class="fab-tooltip">Delete Playlist</span>
+            </a>
+            <a class="fab-option" id="editoption">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="White" class="bi bi-pencil-square"
+                    viewBox="0 0 16 16">
                     <path
                         d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
                     <path fill-rule="evenodd"

@@ -97,7 +97,37 @@ async function searchTracks(query) {
         $("#search-results").html("<p>An error occurred. Please try again.</p>");
     }
 }
+function showNotification(message, type = 'success', duration = 3000) {
+    // Remove existing notification if any
+    $('#notification').remove();
 
+    // Create notification
+    $('body').append(`
+        <div id="notification" class="${type}">
+            <span id="notification-text">${message}</span>
+        </div>
+    `);
+
+    // Show with animation
+    $('#notification').css('display', 'block');
+    setTimeout(() => {
+        $('#notification').addClass('show');
+    }, 10);
+
+    // Auto hide
+    setTimeout(() => {
+        $('#notification').removeClass('show');
+        setTimeout(() => {
+            $('#notification').remove();
+        }, 300);
+    }, duration);
+
+    // Optional: Click to dismiss
+    $('#notification').on('click', function () {
+        $(this).removeClass('show');
+        setTimeout(() => $(this).remove(), 300);
+    });
+}
 // Function to display search results
 function displaySearchResults(tracks) {
     const searchResults = $("#search-results");
@@ -197,22 +227,24 @@ async function openPlaylistModal(trackId) {
 async function addTrackToPlaylist(trackId, playlistId) {
 
     try {
-        const response = await fetch(`${PLAYLISTS_URL}/${playlistId}/add`, {
+        const response = await fetch(`${PLAYLISTS_URL}/${playlistId}/add?token=${sessionStorage.token}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ spotifyTrackId: trackId })
         });
         const data = await response.json();
+        console.log(data);
         if (response.ok && data.success) {
-            alert("Track added to playlist successfully!");
+            showNotification(data.message, 'success');
+
         } else {
-            alert("Failed to add track to playlist.");
+            showNotification(data.message || "Failed to add track to playlist", 'error');
         }
-    } catch (error){
+    } catch (error) {
         console.error("Error adding track to playlist:", error);
-        alert("Error adding track to playlist.");
+        showNotification("Error adding track to playlist", 'error');
     }
-    
+
 }
 
 function displayPlaylists(playlists) {
@@ -279,6 +311,7 @@ function openCreatePlaylistModal() {
             const playlistName = $("#playlist-name").val();
             if (playlistName) {
                 await createPlaylist(playlistName);
+                $("#playlist-name").val("");
                 modal.hide();
             }
         });
