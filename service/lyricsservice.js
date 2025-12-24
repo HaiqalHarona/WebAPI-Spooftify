@@ -26,25 +26,33 @@ const lyricsService = {
             // 2. If not in cache, fetch from Lyrics.ovh API
             const apiLyrics = await this.fetchFromLyricsAPI(trackName, artistName);
 
-            // 3. Save to cache for future use
-            const newCache = new CachedLyrics({
-                spotifyTrackId: trackId,
-                trackName: trackName,
-                artistName: artistName,
-                lyrics: apiLyrics,
-                cachedAt: new Date().toLocaleString()
-            });
+            // 3. Only cache if the API returned actual lyrics (not an error message)
+            if (apiLyrics && !apiLyrics.includes("not found") && !apiLyrics.includes("timeout") && !apiLyrics.includes("unavailable")) {
+                const newCache = new CachedLyrics({
+                    spotifyTrackId: trackId,
+                    trackName: trackName,
+                    artistName: artistName,
+                    lyrics: apiLyrics,
+                    cachedAt: new Date().toLocaleString()
+                });
 
-            await newCache.save();
-            console.log(`Saved lyrics to cache for track: ${trackId}`);
+                await newCache.save();
 
-            // 4. Return the lyrics
-            return {
-                lyrics: apiLyrics,
-                trackName: trackName,
-                artistName: artistName,
-                cachedAt: new Date(newCache.cachedAt).toLocaleString()
-            };
+                // 4. Return the lyrics with cache info
+                return {
+                    lyrics: apiLyrics,
+                    trackName: trackName,
+                    artistName: artistName,
+                    cachedAt: new Date(newCache.cachedAt).toLocaleString()
+                };
+            } else {
+                // Return the lyrics without caching
+                return {
+                    lyrics: apiLyrics,
+                    trackName: trackName,
+                    artistName: artistName
+                };
+            }
 
         } catch (error) {
             console.error('Error in getLyrics function:', error.message);
