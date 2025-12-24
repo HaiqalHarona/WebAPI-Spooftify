@@ -27,6 +27,24 @@ $(async function () {
         deleteTrack(trackId);
     });
 
+    // Lyrics Sidebar Toggle Logic
+    const lyricsBtn = $('#lyrics-toggle-btn');
+    const lyricsCol = $('#lyrics-column');
+    const playlistCol = $('#playlist-column');
+
+    lyricsBtn.on('click', function () {
+        lyricsCol.toggleClass('d-none');
+
+        // Toggle button active state and adjust layout
+        if (!lyricsCol.hasClass('d-none')) {
+            lyricsBtn.removeClass('text-secondary').addClass('text-success');
+            playlistCol.removeClass('mx-auto'); // Align left when sidebar is open
+        } else {
+            lyricsBtn.addClass('text-secondary').removeClass('text-success');
+            playlistCol.addClass('mx-auto'); // Center when sidebar is closed
+        }
+    });
+
     const searchBar = $('#search-bar');
     searchBar.on('input', function () {
         const searchTerm = $(this).val().toLowerCase().trim();

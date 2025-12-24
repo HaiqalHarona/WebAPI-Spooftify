@@ -22,6 +22,8 @@ const archivedPlaylistSchema = new mongoose.Schema({
     name: { type: String, required: true },
     artist: { type: String, required: true }
   }],
+  playlistpicture: String,
+
   archivedAt: {
     type: Date,
     default: Date.now

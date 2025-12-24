@@ -5,38 +5,58 @@
     padding: 20px 0;
 }
 
-.archive-card {
-    background-color: #181818;
-    padding: 16px;
+.card {
+    background-color: var(--dark-gray);
     border-radius: 8px;
-    transition: background-color 0.3s ease;
+    padding: 15px;
     cursor: pointer;
-    text-decoration: none;
-    color: white;
-    display: block;
+    transition: background-color 0.3s, transform 0.2s;
+    text-align: center;
 }
 
-.archive-card:hover {
-    background-color: #282828;
+.card:hover {
+    background-color: #333333;
+    transform: translateY(-5px);
+    color: white !important;
 }
 
-.archive-image {
+.card-image {
     width: 100%;
-    aspect-ratio: 1;
-    background-color: #333;
-    margin-bottom: 16px;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
     border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    margin-bottom: 10px;
+    background-color: var(--medium-gray);
 }
 
-.archive-title {
-    font-weight: 700;
-    font-size: 1rem;
-    margin-bottom: 8px;
+.card-title {
+    font-weight: bold;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    margin-bottom: 3px;
+}
+
+.card-subtitle {
+    color: var(--light-gray);
+    font-size: 0.9em;
+}
+
+.btn-unarchive {
+    background-color: var(--primary-color, #1db954);
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-weight: 600;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+}
+
+.btn-unarchive:hover {
+    background-color: #1ed760;
+    transform: scale(1.05);
 }
