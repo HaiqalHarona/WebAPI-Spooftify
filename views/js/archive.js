@@ -7,7 +7,37 @@ $(async function () {
         }
     }
 })
+function showNotification(message, type = 'success', duration = 3000) {
+    // Remove existing notification if any
+    $('#notification').remove();
 
+    // Create notification
+    $('body').append(`
+        <div id="notification" class="${type}">
+            <span id="notification-text">${message}</span>
+        </div>
+    `);
+
+    // Show with animation
+    $('#notification').css('display', 'block');
+    setTimeout(() => {
+        $('#notification').addClass('show');
+    }, 10);
+
+    // Auto hide
+    setTimeout(() => {
+        $('#notification').removeClass('show');
+        setTimeout(() => {
+            $('#notification').remove();
+        }, 300);
+    }, duration);
+
+    // Optional: Click to dismiss
+    $('#notification').on('click', function () {
+        $(this).removeClass('show');
+        setTimeout(() => $(this).remove(), 300);
+    });
+}
 function loadArchivedPlaylists(archives) {
     const container = $('#archive-container');
 
@@ -15,7 +45,7 @@ function loadArchivedPlaylists(archives) {
 
     if (archives.length === 0) {
         return;
-    }else{
+    } else {
         $("#NotFound").hide();
     }
 
@@ -37,7 +67,7 @@ function loadArchivedPlaylists(archives) {
             </div>
         `);
 
-        card.find('.btn-unarchive').on('click', async function() {
+        card.find('.btn-unarchive').on('click', async function () {
             const archiveId = $(this).closest('.playlist-card').data('id');
             await unarchivePlaylist(archiveId);
         });
@@ -52,15 +82,17 @@ async function unarchivePlaylist(archiveId) {
             method: 'POST'
         });
         const data = await response.json();
-        
+
         if (response.ok) {
-            alert(data.message || "Playlist unarchived successfully");
-            location.reload();
+            showNotification(data.message || "Playlist unarchived successfully", 'success');
+            setTimeout(() => {
+                location.reload();
+            }, 1000);
         } else {
-            alert(data.message || "Failed to unarchive playlist");
+            showNotification(data.message || "Failed to unarchive playlist", 'error');
         }
     } catch (error) {
         console.error("Error unarchiving playlist:", error);
-        alert("An error occurred while unarchiving.");
+        showNotification("An error occurred while unarchiving.", 'error');
     }
 }
