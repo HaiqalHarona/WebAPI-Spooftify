@@ -20,7 +20,10 @@ const archivedPlaylistSchema = new mongoose.Schema({
   tracks: [{
     spotifyTrackId: { type: String, required: true },
     name: { type: String, required: true },
-    artist: { type: String, required: true }
+    artist: { type: String, required: true },
+    album: String,
+    durationMs: Number,
+    albumImage: String
   }],
   playlistpicture: String,
 

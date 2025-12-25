@@ -24,8 +24,12 @@ let archive = {
         tracks: originalPlaylist.tracks.map(track => ({
           spotifyTrackId: track.spotifyTrackId,
           name: track.name,
-          artist: track.artist
-        }))
+          artist: track.artist,
+          album: track.album,
+          durationMs: track.durationMs,
+          albumImage: track.albumImage
+        })),
+        playlistpicture: originalPlaylist.playlistpicture
       });
 
       // Delete the original playlist
@@ -72,9 +76,13 @@ let archive = {
         tracks: archivedPlaylist.tracks.map(track => ({
           spotifyTrackId: track.spotifyTrackId,
           name: track.name,
-          artist: track.artist
+          artist: track.artist,
+          album: track.album,
+          durationMs: track.durationMs,
+          albumImage: track.albumImage
         })),
-        createdAt: new Date()
+        createdAt: new Date(),
+        playlistpicture: archivedPlaylist.playlistpicture
       });
 
       // Delete the archived playlist

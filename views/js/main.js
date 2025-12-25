@@ -8,7 +8,7 @@ $(async function () {
 
         clearTimeout(searchTimeout);
 
-        // Set a new timeout to avoid too many API calls
+        // Set a new timeout to avoid too many API calls - DEEPSEEK
         searchTimeout = setTimeout(() => {
             if (query) {
                 searchTracks(query);
@@ -63,6 +63,7 @@ $(async function () {
         $("#playlist-modal").hide();
         $("#create-playlist-modal").hide();
         $("#delete-playlist-modal").hide();
+        $("#archive-playlist-modal").hide();
     });
 
     $("#addoption").on("click", function (e) {
@@ -75,6 +76,12 @@ $(async function () {
         e.preventDefault();
         e.stopPropagation();
         openDeletePlaylistModal();
+    });
+
+    $("#archiveoption").on("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        openArchivePlaylistModal();
     });
 
     let response = await fetch(PLAYLISTS_URL + "?token=" + sessionStorage.token);
@@ -253,6 +260,102 @@ async function addTrackToPlaylist(trackId, playlistId) {
         showNotification("Error adding track to playlist", 'error');
     }
 
+}
+
+async function openArchivePlaylistModal() {
+    let modal = $("#archive-playlist-modal");
+
+    if (modal.length === 0) {
+        $("body").append(`
+            <div id="archive-playlist-modal" class="modal" tabindex="-1" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1050; background-color: rgba(0,0,0,0.5); justify-content: center; align-items: center;">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Archive Playlist</h5>
+                            <button type="button" class="btn-close close-modal" aria-label="Close" style="border: none; background: none; font-size: 1.5rem;">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div id="archive-modal-playlists-list" class="list-group">
+                                <p>Loading...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `);
+        modal = $("#archive-playlist-modal");
+    }
+
+    modal.css("display", "flex");
+
+    const playlistContainer = $("#archive-modal-playlists-list");
+    playlistContainer.html("<p>Loading...</p>");
+
+    try {
+        const response = await fetch(PLAYLISTS_URL + "?token=" + sessionStorage.token);
+        if (response.ok) {
+            const data = await response.json();
+            playlistContainer.empty();
+            if (data.success && data.playlists && data.playlists.length > 0) {
+                data.playlists.forEach(playlist => {
+                    const trackCount = playlist.tracks ? playlist.tracks.length : 0;
+                    const item = $(`
+                        <div class="list-group-item list-group-item-action">
+                            <div class="fw-bold">${playlist.name}</div>
+                            <div class="d-flex align-items-center mt-1">
+                                <small class="text-muted me-3">${trackCount} Tracks</small>
+                                <button class="btn btn-warning btn-sm archive-btn">Archive</button>
+                            </div>
+                        </div>
+                    `);
+
+                    item.find(".archive-btn").on("click", async function (e) {
+                        e.stopPropagation();
+                        if (confirm(`Are you sure you want to archive "${playlist.name}"?`)) {
+                            await archivePlaylist(playlist._id);
+                            modal.hide();
+                        }
+                    });
+
+                    playlistContainer.append(item);
+                });
+            } else {
+                playlistContainer.append("<p>No playlists found.</p>");
+            }
+        } else {
+            playlistContainer.html("<p>Failed loading playlists.</p>");
+        }
+    } catch (error) {
+        console.error("Error loading playlists:", error);
+        playlistContainer.html("<p>Error loading playlists.</p>");
+    }
+}
+
+async function archivePlaylist(playlistId) {
+    try {
+        const response = await fetch(`${PLAYLISTS_URL}/${playlistId}/archive?token=${sessionStorage.token}`, {
+            method: 'POST'
+        });
+        const data = await response.json();
+        if(response.ok){
+            showNotification(data.message, 'success');
+            // Refresh playlists
+            let resp = await fetch(PLAYLISTS_URL + "?token=" + sessionStorage.token);
+            if (resp.ok) {
+                let d = await resp.json();
+                if (d.success) {
+                    displayPlaylists(d.playlists);
+                }
+            }
+        }else{
+            showNotification(data.message, 'error');
+        }
+    }catch(error){
+        console.error("Error archiving playlist:", error);
+        showNotification("Error archiving playlist", 'error');
+    }
 }
 
 function displayPlaylists(playlists) {
