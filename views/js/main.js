@@ -55,6 +55,13 @@ $(async function () {
             // console.log("Track ID from data attribute:", trackId);  Debug
             openPlaylistModal(trackId);
         });
+
+        $("#search-results").on("click", ".btn-like", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const trackId = $(this).closest(".track-card").data("track-id");
+            addToLikedSongs(trackId);
+        });
     } else {
         console.error("#search-results element not found!");
     }
@@ -91,6 +98,17 @@ $(async function () {
             displayPlaylists(data.playlists);
         }
     }
+    try {
+        let likedSongsCount = await fetch(LIKED_SONGS_URL + "?token=" + sessionStorage.token);
+        if (likedSongsCount.ok) {
+            let likedSongsData = await likedSongsCount.json();
+            $("#liked-songs-count").text((likedSongsData.count || 0) + " Tracks");
+        }
+
+    }catch (error) {
+        console.error("Error fetching liked songs count:", error);
+    }
+    
     
 });
 
@@ -262,6 +280,26 @@ async function addTrackToPlaylist(trackId, playlistId) {
 
 }
 
+async function addToLikedSongs(trackId) {
+    try {
+        const response = await fetch(`${LIKED_SONGS_URL}/?token=${sessionStorage.token}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ spotifyTrackId: trackId })
+        });
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+            showNotification(data.message || "Added to Liked Songs", 'success');
+        } else {
+            showNotification(data.message || "Failed to add to Liked Songs", 'error');
+        }
+    } catch (error) {
+        console.error("Error adding to liked songs:", error);
+        showNotification("Error adding to liked songs", 'error');
+    }
+}
+
 async function openArchivePlaylistModal() {
     let modal = $("#archive-playlist-modal");
 
@@ -306,7 +344,7 @@ async function openArchivePlaylistModal() {
                             <div class="fw-bold">${playlist.name}</div>
                             <div class="d-flex align-items-center mt-1">
                                 <small class="text-muted me-3">${trackCount} Tracks</small>
-                                <button class="btn btn-warning btn-sm archive-btn">Archive</button>
+                                <button class="btn btn-warning btn-sm archive-btn" id="archive-btn">Archive</button>
                             </div>
                         </div>
                     `);
@@ -339,7 +377,7 @@ async function archivePlaylist(playlistId) {
             method: 'POST'
         });
         const data = await response.json();
-        if(response.ok){
+        if (response.ok) {
             showNotification(data.message, 'success');
             // Refresh playlists
             let resp = await fetch(PLAYLISTS_URL + "?token=" + sessionStorage.token);
@@ -349,10 +387,10 @@ async function archivePlaylist(playlistId) {
                     displayPlaylists(d.playlists);
                 }
             }
-        }else{
+        } else {
             showNotification(data.message, 'error');
         }
-    }catch(error){
+    } catch (error) {
         console.error("Error archiving playlist:", error);
         showNotification("Error archiving playlist", 'error');
     }
@@ -534,7 +572,7 @@ async function deletePlaylist(playlistId) {
             method: 'DELETE'
         });
         const data = await response.json();
-        if(response.ok){
+        if (response.ok) {
             showNotification(data.message, 'success');
             // Refresh playlists
             let resp = await fetch(PLAYLISTS_URL + "?token=" + sessionStorage.token);
@@ -544,10 +582,10 @@ async function deletePlaylist(playlistId) {
                     displayPlaylists(d.playlists);
                 }
             }
-        }else{
+        } else {
             showNotification(data.message, 'error');
         }
-    }catch(error){
+    } catch (error) {
         console.error("Error deleting playlist:", error);
         showNotification("Error deleting playlist", 'error');
     }

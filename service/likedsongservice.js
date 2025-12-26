@@ -50,7 +50,7 @@ let likedsongservice = {
                 
                 return {
                     success: true,
-                    message: `Track ${trackDetails.name} by ${trackDetails.artist} added to liked songs`,
+                    message: `Track: ${trackDetails.name} by ${trackDetails.artist} added to liked songs`,
                     track: trackDetails
                 };
             }
