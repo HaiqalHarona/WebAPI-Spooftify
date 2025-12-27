@@ -79,29 +79,29 @@ $(async function () {
         renderPlaylist(filteredTracks);
     });
 
-    if (!playlistId) {
-        $('#playlist-container').html('<p class="text-white">Error: No Playlist ID provided.</p>');
-        return;
-    }
-
-    // Fetch playlist details to get the name
-    try {
-        const response = await fetch(`${PLAYLISTS_URL}?token=${sessionStorage.token}`);
-        if (response.ok) {
-            const data = await response.json();
-            if (data.success && data.playlists) {
-                const playlist = data.playlists.find(p => p._id === playlistId);
-                if (playlist) {
-                    $('#playlistname').text(playlist.name);
-                    // console.log("Debug - Playlist Name:", playlist.name);
+    if (playlistId) {
+        // Fetch playlist details to get the name
+        try {
+            const response = await fetch(`${PLAYLISTS_URL}?token=${sessionStorage.token}`);
+            if (response.ok) {
+                const data = await response.json();
+                if (data.success && data.playlists) {
+                    const playlist = data.playlists.find(p => p._id === playlistId);
+                    if (playlist) {
+                        $('#playlistname').text(playlist.name);
+                        // console.log("Debug - Playlist Name:", playlist.name);
+                    }
                 }
             }
+        } catch (error) {
+            console.error('Failed to load playlist details:', error);
         }
-    } catch (error) {
-        console.error('Failed to load playlist details:', error);
+    } else {
+        $('#playlistname').text("Liked Songs");
     }
 
-    const url = `${PLAYLISTS_URL}/${playlistId}/tracks?token=${sessionStorage.token}`;
+    const url = playlistId ? `${PLAYLISTS_URL}/${playlistId}/tracks?token=${sessionStorage.token}` : `${LIKED_SONGS_URL}?token=${sessionStorage.token}`;
+
     try {
         const response = await fetch(url);
         if (!response.ok) {
@@ -110,13 +110,15 @@ $(async function () {
         }
 
         const data = await response.json();
-        if (data.success && data.tracks) {
-            trackData = data.tracks.map(track => ({
+        const tracks = data.tracks || data.likedSongs;
+        if (data.success && tracks) {
+            trackData = tracks.map(track => ({
                 id: track.spotifyTrackId,
                 name: track.name,
                 artist: track.artist,
                 album: track.album,
-                durationMs: track.durationMs
+                durationMs: track.durationMs,
+                albumImage: track.albumImage
             }));
             renderPlaylist(trackData);
             // Initialize player with the first track if API is ready
@@ -145,7 +147,9 @@ async function deleteTrack(trackId) {
     if (!confirm("Are you sure you want to remove this track?")) return;
 
     try {
-        const response = await fetch(`${PLAYLISTS_URL}/${playlistId}/tracks/${trackId}?token=${sessionStorage.token}`, {
+        const deleteUrl = playlistId ? `${PLAYLISTS_URL}/${playlistId}/tracks/${trackId}?token=${sessionStorage.token}` : `${LIKED_SONGS_URL}/${trackId}?token=${sessionStorage.token}`;
+
+        const response = await fetch(deleteUrl, {
             method: 'DELETE'
         });
 
@@ -182,9 +186,12 @@ function renderPlaylist(tracks) {
                             </div>
                         </div>
                         
-                        <div class="col-5 d-flex flex-column min-w-0 pr-4">
-                            <p class="mb-0 text-white fw-semibold text-truncate">${track.name}</p>
-                            <p class="mb-0 small text-secondary">${track.artist}</p>
+                        <div class="col-5 d-flex align-items-center min-w-0 pr-4">
+                            <img src="${track.albumImage || './assets/default-album.png'}" alt="${track.album}" class="rounded me-3" style="width: 40px; height: 40px; object-fit: cover;">
+                            <div class="d-flex flex-column min-w-0">
+                                <p class="mb-0 text-white fw-semibold text-truncate">${track.name}</p>
+                                <p class="mb-0 small text-secondary">${track.artist}</p>
+                            </div>
                         </div>
 
                         <div class="col-4 d-none d-sm-block small text-secondary text-truncate">

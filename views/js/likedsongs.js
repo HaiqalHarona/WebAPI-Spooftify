@@ -1,68 +1,157 @@
+let embedController = null;
+let isPlaying = false;
+let trackData = [];
+let iFrameAPI = null;
 
-        // --- CONSTANTS AND DATA ---
+window.onSpotifyIframeApiReady = (IFrameAPI) => {
+    iFrameAPI = IFrameAPI;
+    if (trackData.length > 0 && !embedController) {
+        initSpotifyPlayer(trackData[0].id);
+    }
+};
 
-        const DEFAULT_TRACK_ID = '2YZa0dsV3xXGZ61XFYiRt8';
-        let embedController = null;
-        let isPlaying = false;
+// Initialize UI components
+$(async function () {
 
-        // Data structure to create 5 identical placeholder songs
-        const trackData = [
-            { id: DEFAULT_TRACK_ID, name: "Sunset Drive", artist: "Cosmograph, LEVEL NINE", album: "Top Hits 2024", durationMs: 194594 },
-            { id: DEFAULT_TRACK_ID, name: "City Lights", artist: "Aurora Bloom", album: "Neon Echoes", durationMs: 210123 },
-            { id: DEFAULT_TRACK_ID, name: "Midnight Rain", artist: "The Synthetics", album: "Rainy Day Mixtape", durationMs: 185000 },
-            { id: DEFAULT_TRACK_ID, name: "Electric Dream", artist: "Cosmograph", album: "Dreamscape", durationMs: 220000 },
-            { id: DEFAULT_TRACK_ID, name: "Ocean Waves", artist: "LEVEL NINE", album: "Acoustic Retreat", durationMs: 170000 },
-        ];
+    $('#playlist-container').on('click', '.song-row', function () {
+        const trackId = $(this).attr('data-id');
+        loadNewTrack(trackId);
+    });
 
-        // --- HELPER FUNCTIONS ---
+    $('#playlist-container').on('click', '.delete-track-btn', function (e) {
+        e.stopPropagation();
+        const trackId = $(this).attr('data-id');
+        deleteTrack(trackId);
+    });
 
-        function formatDuration(ms) {
-            const totalSeconds = Math.floor(ms / 1000);
-            const minutes = Math.floor(totalSeconds / 60);
-            const seconds = totalSeconds % 60;
-            return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    // Lyrics Sidebar Toggle
+    const lyricsBtn = $('#lyrics-toggle-btn');
+    const lyricsCol = $('#lyrics-column');
+    const playlistCol = $('#playlist-column');
+
+    lyricsBtn.on('click', function () {
+        lyricsCol.toggleClass('d-none');
+
+        // Toggle button active state and adjust layout
+        if (!lyricsCol.hasClass('d-none')) {
+            lyricsBtn.removeClass('text-secondary').addClass('text-success');
+            playlistCol.removeClass('mx-auto'); // Align left when sidebar is open
+        } else {
+            lyricsBtn.addClass('text-secondary').removeClass('text-success');
+            playlistCol.addClass('mx-auto'); // Center when sidebar is closed
+        }
+    });
+
+    const searchBar = $('#search-bar');
+    searchBar.on('input', function () {
+        const searchTerm = $(this).val().toLowerCase().trim();
+
+        if (searchTerm === '') {
+            renderFullPlaylist();
+            return;
         }
 
+        // Score tracks based on match quality
+        const scoredTracks = trackData.map(track => {
+            const trackName = track.name.toLowerCase();
+            const artist = track.artist.toLowerCase();
+            const album = track.album.toLowerCase();
 
-        function updateMainPlayButton(newIsPlaying) {
-            const btn = document.getElementById('main-play-btn');
-            const icon = btn ? btn.querySelector('i') : null;
-            if (!icon) return;
+            let score = 0;
 
-            isPlaying = newIsPlaying;
-            icon.className = isPlaying ? 'bi bi-pause-fill h4 mb-0' : 'bi bi-play-fill h4 mb-0';
+            if (trackName.startsWith(searchTerm)) score += 100;
+            else if (artist.startsWith(searchTerm)) score += 80;
+            else if (album.startsWith(searchTerm)) score += 60;
+            else if (trackName.includes(searchTerm)) score += 40;
+            else if (artist.includes(searchTerm)) score += 20;
+            else if (album.includes(searchTerm)) score += 10;
+            else score = 0;
+
+            return { ...track, score };
+        }).filter(track => track.score > 0)
+            .sort((a, b) => b.score - a.score);
+
+        const filteredTracks = scoredTracks.map(({ score, ...track }) => track);
+
+        renderPlaylist(filteredTracks);
+    });
+
+
+    const url = `${LIKED_SONGS_URL}?token=${sessionStorage.token}`;
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || `Error fetching liked songs: ${response.statusText}`);
         }
 
-        function loadNewTrack(trackId) {
-            if (embedController) {
-                const trackUri = `spotify:track:${trackId}`;
-                embedController.loadUri(trackUri).then(() => {
-                    // Start playing immediately after loading
-                    embedController.togglePlay();
-                    updateMainPlayButton(true);
-                    console.log(`Loaded and started playing track: ${trackId}`);
-                });
+        const data = await response.json();
+        if (data.success && data.likedSongs) {
+            trackData = data.likedSongs.map(track => ({
+                id: track.spotifyTrackId,
+                name: track.name,
+                artist: track.artist,
+                album: track.album,
+                durationMs: track.durationMs,
+                albumImage: track.albumImage
+            }));
+            renderPlaylist(trackData);
+            // Initialize player with the first track if API is ready
+            if (iFrameAPI && !embedController && trackData.length > 0) {
+                initSpotifyPlayer(trackData[0].id);
+            }
+        } else {
+            if (data.success && (!data.likedSongs || data.likedSongs.length === 0)) {
+                $('#playlist-container').html('<p class="text-white">No liked songs yet.</p>');
             } else {
-                console.error("Player controller not yet initialized.");
+                throw new Error(data.message || 'Could not retrieve liked songs.');
             }
         }
+    } catch (error) {
+        console.error('Failed to load liked songs:', error);
+        $('#playlist-container').html(`<p class="text-danger">Error: ${error.message}</p>`);
+    }
+});
 
-        // --- UI RENDERING AND EVENTS ---
+// --- Helper Functions ---
 
-        function renderPlaylist(tracks) {
-            const container = document.getElementById('playlist-container');
-            if (!container) {
-                console.error("Error: Playlist container element not found.");
-                return;
-            }
+function formatDuration(ms) {
+    const totalSeconds = Math.floor(ms / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return `:${seconds.toString().padStart(2, '0')}`;
+}
 
-            container.innerHTML = tracks.map((track, index) => {
-                const escapedTrackName = track.name.replace(/'/g, "\\'");
+async function deleteTrack(trackId) {
+    try {
+        const response = await fetch(`${LIKED_SONGS_URL}/${trackId}?token=${sessionStorage.token}`, {
+            method: 'DELETE'
+        });
 
-                return `
+        if (response.ok) {
+            trackData = trackData.filter(track => track.id !== trackId);
+            renderPlaylist(trackData);
+        } else {
+            const data = await response.json();
+            alert(data.message || "Failed to remove track.");
+        }
+    } catch (error) {
+        console.error("Error removing track:", error);
+    }
+}
+
+function renderPlaylist(tracks) {
+    const container = $('#playlist-container');
+    if (container.length === 0) {
+        console.error("Error: Playlist container element not found.");
+        return;
+    }
+
+    container.html(tracks.map((track, index) => {
+
+        return `
                     <div 
                         data-id="${track.id}"
-                        onclick="loadNewTrack('${track.id}')"
                         class="song-row row mx-0 align-items-center py-2 rounded-lg cursor-pointer"
                     >
                         <div class="col-1 text-center text-secondary track-index">
@@ -72,76 +161,69 @@
                             </div>
                         </div>
                         
-                        <div class="col-6 d-flex flex-column min-w-0 pr-4">
-                            <p class="mb-0 text-white fw-semibold text-truncate">${track.name}</p>
-                            <p class="mb-0 small text-secondary">${track.artist}</p>
+                        <div class="col-5 d-flex align-items-center min-w-0 pr-4">
+                            <img src="${track.albumImage || './assets/default-album.png'}" alt="${track.album}" class="rounded me-3" style="width: 40px; height: 40px; object-fit: cover;">
+                            <div class="d-flex flex-column min-w-0">
+                                <p class="mb-0 text-white fw-semibold text-truncate">${track.name}</p>
+                                <p class="mb-0 small text-secondary">${track.artist}</p>
+                            </div>
                         </div>
 
                         <div class="col-4 d-none d-sm-block small text-secondary text-truncate">
                             ${track.album}
                         </div>
+                        <div class="col-1 text-center">
+                            <button class="btn btn-link text-secondary p-0 delete-track-btn" data-id="${track.id}">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
 
                         <div class="col-1 small text-secondary text-end">
                             ${formatDuration(track.durationMs)}
                         </div>
+
+
                     </div>
                 `;
-            }).join('');
-        }
+    }).join(''));
+}
 
-        function renderFullPlaylist() {
-            renderPlaylist(trackData);
-        }
+function renderFullPlaylist() {
+    renderPlaylist(trackData);
+}
 
-        // --- SPOTIFY IFRAME API INITIALIZATION ---
+function initSpotifyPlayer(firstTrackId) {
+    const element = $('#spotify-player-container')[0];
+    if (!element || !iFrameAPI) return;
 
-        window.onSpotifyIframeApiReady = (IFrameAPI) => {
-            const element = document.getElementById('spotify-player-container');
-            if (!element) return;
+    const options = {
+        width: '100%',
+        height: '96',
+        uri: `spotify:track:${firstTrackId}`
+    };
 
-            // Options for the single, compact player in the bottom bar
-            const options = {
-                width: '100%',
-                height: '96', // Matches the parent container height
-                uri: `spotify:track:${DEFAULT_TRACK_ID}` // Initial track
-            };
+    const callback = (Controller) => {
+        embedController = Controller;
+        // console.log("Spotify Embed Controller initialized.");
+    };
 
-            const callback = (Controller) => {
-                embedController = Controller;
-                console.log("Spotify Embed Controller initialized.");
+    iFrameAPI.createController(element, options, callback);
+}
 
-                // Hook up the main play button to the controller
-                document.getElementById('main-play-btn').addEventListener('click', () => {
-                    Controller.togglePlay().then(() => {
-                        // The togglePlay command is asynchronous; we update the UI immediately
-                        updateMainPlayButton(!isPlaying);
-                    });
-                });
-
-
-            };
-
-            IFrameAPI.createController(element, options, callback);
-        };
-
-        // Initialize UI components
-        document.addEventListener('DOMContentLoaded', () => {
-            renderFullPlaylist();
-            // Initialize main play button to 'Play' state
-            updateMainPlayButton(false);
-
-            const searchBar = document.getElementById('search-bar');
-            searchBar.addEventListener('input', (e) => {
-                const searchTerm = e.target.value.toLowerCase();
-                if (searchTerm === '') {
-                    renderFullPlaylist();
-                    return;
-                }
-                const filteredTracks = trackData.filter(track => {
-                    return track.name.toLowerCase().includes(searchTerm) ||
-                           track.artist.toLowerCase().includes(searchTerm) ||
-                           track.album.toLowerCase().includes(searchTerm);
-                });
-                renderPlaylist(filteredTracks);
-            });
+function loadNewTrack(trackId) {
+    if (!trackId || trackId === 'undefined') {
+        console.error("Error: Invalid Track ID");
+        return;
+    }
+    if (embedController) {
+        const trackUri = `spotify:track:${trackId}`;
+        embedController.loadUri(trackUri).then(() => {
+            // Start playing immediately after loading
+            embedController.togglePlay();
+        }).catch(error => {
+            console.error("Error loading track in Spotify player:", error);
         });
+    } else {
+        console.error("Player controller not yet initialized.");
+    }
+}

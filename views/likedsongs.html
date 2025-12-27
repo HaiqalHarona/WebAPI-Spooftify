@@ -16,6 +16,7 @@
 
 
 
+
 </head>
 
 <body>
@@ -35,37 +36,32 @@
     </header>
 
     <div class="container-fluid pt-4 pb-4">
-        <div class="row justify-content-center">
-            <div class="col-12 col-md-10 col-lg-8">
+        <div class="row" id="main-row">
+            <div class="col-12 col-md-10 col-lg-8 mx-auto transition-all" id="playlist-column">
+                <!-- Search Bar -->
+                <div class="mb-4">
+                    <input type="text" id="search-bar" class="form-control" placeholder="Search in playlist...">
+                </div>
 
                 <!-- Playlist Header Section -->
                 <header class="bg-dark p-4 rounded-xl shadow-lg mb-4">
                     <div class="d-flex align-items-end">
                         <!-- Album Image  -->
-                        <img src="./assets/heart-organ.png"
-                            onerror="this.src='https://placehold.co/150x150/20c997/000000?text=Sofy';"
-                            alt="Playlist Art" class="img-fluid me-4 rounded shadow-sm"
-                            style="width: 100px; height: 100px;">
+                        <div class="card-image me-4 rounded shadow-sm"
+                            style="width: 100px; height: 100px; background: linear-gradient(135deg, #450af5, #c4efd9); display: flex; justify-content: center; align-items: center;">
+                            <img src="./assets/heart-organ.png"
+                                style="width: 60px; height: 60px; filter: brightness(0) invert(1);">
+                        </div>
 
                         <div>
-                            <p class="text-white-50 small fw-semibold text-uppercase mb-0">Playlist</p>
-                            <h1 class="display-6 fw-bolder text-white">Liked Songs</h1>
-                            <p class="small text-white-50 mb-0">Your favorite tracks</p>
+                            <h1 class="display-6 fw-bolder text-white" id="LikedSongsName">Liked Songs</h1>
+                            <p></p> <!-- Spacer -->
                         </div>
                     </div>
                 </header>
 
-                <!-- Playback Button Row -->
-                <div class="d-flex align-items-center mb-4">
-                    <button id="main-play-btn" class="btn btn-success rounded-circle shadow-lg me-3" title="Play/Pause">
-                        <i class="bi bi-play-fill h4 mb-0"></i>
-                    </button>
-                </div>
 
-                <!-- Search Bar -->
-                <div class="mb-4">
-                    <input type="text" id="search-bar" class="form-control" placeholder="Search in liked songs...">
-                </div>
+
 
                 <!-- Playlist Details Header -->
                 <div
@@ -81,19 +77,35 @@
                 </div>
 
             </div>
+
+            <!-- Lyrics Sidebar -->
+            <div class="col-lg-4 d-none" id="lyrics-column">
+                <div class="lyrics-sidebar shadow-lg">
+                    <h3 class="mb-4 fw-bold">Lyrics</h3>
+                    <div id="lyrics-content">
+                        <p class="lyrics-placeholder">Play a song to see lyrics</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
     <div class="fixed-bottom player-bar d-flex align-items-center px-2 px-md-4">
-        <div class="w-100 h-100 d-flex align-items-center" id="spotify-player-container">
-            <!-- Spotify Iframe API will inject the player here -->
+        <div class="flex-grow-1 h-100 d-flex align-items-center" id="spotify-player-container">
+            <!-- Spotify Iframe -->
+        </div>
+        <div class="ms-3">
+            <button id="lyrics-toggle-btn" class="btn btn-link text-secondary" title="Lyrics">
+                <img src="./assets/lyrics.png" style="width: 24px; filter: brightness(0) invert(1);">
+            </button>
         </div>
     </div>
     <script src="./js/jquery.min.js"></script>
     <script src="./js/const.js"></script>
-    <script type="text/javascript" src="./js/likedsongs.js"></script>
+    <script type="text/javascript" src="./js/playlist.js"></script>
     <script src="./js/auth.js"></script>
     <script src="https://open.spotify.com/embed/iframe-api/v1" async></script>
+
 
 
 </body>
