@@ -20,7 +20,7 @@ router.use(express.urlencoded({
   extended: true
 }));
 router.use(express.json());
-router.use(cors()); 
+router.use(cors());
 
 router.use('/api', authenticate);
 
@@ -164,13 +164,13 @@ router.post('/users/create', function (req, res) {
 router.post('/api/playlists/create', async function (req, res) {
   try {
     const { name, tracks } = req.body;
-    const userId = res.locals.userId; 
+    const userId = res.locals.userId;
 
     // Validate input
     if (!name) {
       return res.status(400).json({ message: "Playlist name is required" });
     }
-    
+
     if (!userId) {
       return res.status(401).json({ message: "Authentication required" });
     }
@@ -242,7 +242,7 @@ router.post('/api/playlists/:id/add', async function (req, res) {
 
     // Get track details from Spotify
     const trackDetails = await spotify.getTrackDetails(spotifyTrackId);
-    
+
     if (!trackDetails) {
       return res.status(404).json({
         message: "Track not found on Spotify"
@@ -366,17 +366,17 @@ router.post('/api/liked-songs', async function (req, res) {
   try {
     const userId = res.locals.userId;
     const { spotifyTrackId } = req.body;
-    
+
     // Validate input
     if (!spotifyTrackId) {
       return res.status(400).json({
         message: "Track ID is required"
       });
     }
-    
+
     // Add the track to liked songs
     const result = await likedSongs.addLikedSong(userId, spotifyTrackId);
-    
+
     if (result.success) {
       res.status(201).json({
         success: true,
@@ -400,10 +400,10 @@ router.delete('/api/liked-songs/:trackId', async function (req, res) {
   try {
     const userId = res.locals.userId;
     const trackId = req.params.trackId;
-    
+
     // Remove the track from liked songs
     const result = await likedSongs.removeLikedSong(userId, trackId);
-    
+
     if (result.success) {
       res.status(200).json({
         success: true,
@@ -426,10 +426,10 @@ router.delete('/api/liked-songs/:trackId', async function (req, res) {
 router.get('/api/liked-songs', async function (req, res) {
   try {
     const userId = res.locals.userId;
-    
+
     // Find user's liked songs
     const userLikedSongs = await require('./models/likedsongs.js').findOne({ user: userId });
-    
+
     if (!userLikedSongs) {
       return res.status(200).json({
         success: true,
@@ -437,7 +437,7 @@ router.get('/api/liked-songs', async function (req, res) {
         tracks: []
       });
     }
-    
+
     res.status(200).json({
       success: true,
       count: userLikedSongs.tracks.length,
@@ -448,5 +448,36 @@ router.get('/api/liked-songs', async function (req, res) {
     res.status(500).json({ message: "Failed to retrieve liked songs: " + error.message });
   }
 });
+
+// Update User
+router.put('/api/users', async function (req, res) {
+  try {
+    let userId = res.locals.userId;
+    let data = req.body;
+    let updateData = {};
+
+    if (data.username) updateData.username = data.username;
+    if (data.password) updateData.password = data.password;
+
+    await user.UpdateUser(userId, updateData)
+      .then(function (response) {
+        if (!response) {
+          res.status(200).json({ "message": "User not found" });
+        } else {
+          res.status(200).json({
+            success: true,
+            message: "User updated successfully",
+            user: response
+          });
+        }
+      })
+      .catch(function (error) {
+        res.status(500).json({ "message": error.message });
+      });
+  } catch (error) {
+    res.status(500).json({ "message": error.message });
+  }
+});
+
 
 module.exports = router;

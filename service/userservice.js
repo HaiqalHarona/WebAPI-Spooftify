@@ -46,8 +46,8 @@ let userservice = {
             const updatedUser = await user.findByIdAndUpdate(
                 userId,
                 updateData, {
-                    new: true // This option returns the document after the update
-                }
+                new: true // This option returns the document after the update
+            }
             );
 
             if (!updatedUser) {
@@ -106,7 +106,7 @@ let userservice = {
         }
     },
 
-  
+
     async checkToken(token) {
         try {
             let result = await user.findOne({
@@ -136,10 +136,17 @@ let userservice = {
             throw new Error("Error removing token, please try again later.");
         }
     },
-    
-    async UpdateUser(userId, updateData){
-        
+
+    async UpdateUser(userId, updateData) {
+        try {
+            let result = await userId.findOneAndUpdate(userId, updateData);
+            if (!result) return "Unable to update user";
+            else return "User updated successfully";
+        } catch (e) {
+            console.error(e.message);
+            throw new Error("Error updating user, please try again later.");
+        }
     }
-};
+}
 
 module.exports = userservice;
