@@ -135,6 +135,10 @@ let userservice = {
             console.error(e.message);
             throw new Error("Error removing token, please try again later.");
         }
+    },
+    
+    async UpdateUser(userId, updateData){
+        
     }
 };
 
