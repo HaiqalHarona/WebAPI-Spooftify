@@ -139,7 +139,7 @@ let userservice = {
 
     async UpdateUser(userId, updateData) {
         try {
-            let result = await userId.findOneAndUpdate(userId, updateData);
+            let result = await user.findOneAndUpdate(userId, updateData);
             if (!result) return "Unable to update user";
             else return "User updated successfully";
         } catch (e) {
