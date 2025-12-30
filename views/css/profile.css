@@ -82,3 +82,7 @@
 
 .text-success { color: var(--spotify-green); }
 .text-danger { color: #e91429; }
+
+#message-area {
+    color: red;
+}

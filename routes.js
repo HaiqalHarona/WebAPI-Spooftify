@@ -449,6 +449,28 @@ router.get('/api/liked-songs', async function (req, res) {
   }
 });
 
+// Get User Information
+router.get('/api/users', async function (req, res) {
+  try {
+    const userId = res.locals.userId;
+    const userData = await user.getUserById(userId);
+    
+    if (!userData) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    
+    res.status(200).json({
+      success: true,
+      email: userData.email,
+      username: userData.username,
+      userpicture: userData.userpicture
+    });
+  } catch (error) {
+    console.error('Error getting user information:', error.message);
+    res.status(500).json({ message: "Failed to get user information: " + error.message });
+  }
+});
+
 // Update User
 router.put('/api/users', async function (req, res) {
   try {
