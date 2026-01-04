@@ -5,6 +5,7 @@ let embedController = null;
 let isPlaying = false;
 let trackData = [];
 let iFrameAPI = null;
+let currentTrackId = null;
 
 window.onSpotifyIframeApiReady = (IFrameAPI) => {
     iFrameAPI = IFrameAPI;
@@ -38,7 +39,12 @@ $(async function () {
         // Toggle button active state and adjust layout
         if (!lyricsCol.hasClass('d-none')) {
             lyricsBtn.removeClass('text-secondary').addClass('text-success');
-            playlistCol.removeClass('mx-auto'); // Align left when sidebar is open
+            playlistCol.removeClass('mx-auto');
+            getLyrics(currentTrackId);
+
+            // if (currentTrackId) {
+            //     console.log("Current Spotify Track ID:", currentTrackId);
+            // }
         } else {
             lyricsBtn.addClass('text-secondary').removeClass('text-success');
             playlistCol.addClass('mx-auto'); // Center when sidebar is closed
@@ -80,7 +86,6 @@ $(async function () {
     });
 
     if (playlistId) {
-        // Fetch playlist details to get the name
         try {
             const response = await fetch(`${PLAYLISTS_URL}?token=${sessionStorage.token}`);
             if (response.ok) {
@@ -135,6 +140,32 @@ $(async function () {
 });
 
 // --- Helper Functions ---
+
+async function getLyrics(trackId) {
+    if (!trackId) {
+        console.error("Error: Invalid Track ID");
+        return;
+    }
+
+
+    try {
+        const response = await fetch(`${TRACKS_URL}/${trackId}/lyrics?token=${sessionStorage.token}`);
+        if (response.ok) {
+            const data = await response.json();
+            if (data.success && data.lyrics) {
+                console.log(data.lyrics);
+                $('#lyrics-content').text(data.lyrics).css('white-space', 'pre-wrap');
+            } else {
+                $('#lyrics-content').text("Lyrics not found.");
+            }
+        } else {
+            $('#lyrics-content').text("Lyrics not found.");
+        }
+    }catch (error) {
+        console.error("Error fetching lyrics:", error);
+        $('#lyrics-content').text("Lyrics not found.");
+    }
+}
 
 function formatDuration(ms) {
     const totalSeconds = Math.floor(ms / 1000);
@@ -227,9 +258,11 @@ function initSpotifyPlayer(firstTrackId) {
         uri: `spotify:track:${firstTrackId}`
     };
 
+    currentTrackId = firstTrackId;
     const callback = (Controller) => {
         embedController = Controller;
         // console.log("Spotify Embed Controller initialized.");
+
     };
 
     iFrameAPI.createController(element, options, callback);
@@ -242,6 +275,7 @@ function loadNewTrack(trackId) {
     //     return;
     // }
     if (embedController) {
+        currentTrackId = trackId;
         const trackUri = `spotify:track:${trackId}`;
         // console.log("Debug - Loading URI:", trackUri);
         embedController.loadUri(trackUri).then(() => {
