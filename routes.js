@@ -454,11 +454,11 @@ router.get('/api/users', async function (req, res) {
   try {
     const userId = res.locals.userId;
     const userData = await user.getUserById(userId);
-    
+
     if (!userData) {
       return res.status(404).json({ message: "User not found" });
     }
-    
+
     res.status(200).json({
       success: true,
       email: userData.email,
@@ -500,6 +500,31 @@ router.put('/api/users', async function (req, res) {
     res.status(500).json({ "message": error.message });
   }
 });
+
+// Update Playlist Name
+router.put('/api/playlists/:id', async function (req, res) {
+  let userId = res.locals.userId;
+  let playlistId = req.params.id;
+  let data = req.body;
+
+  playlist.updatePlaylist(playlistId, userId, { name: data.name }).then(function (response) {
+    if (!response) {
+      res.status(404).json({ "message": "Playlist not found" });
+    } else {
+      res.status(200).json({
+        success: true,
+        message: `Playlist updated to "${data.name}" successfully`,
+        playlist: response
+      });
+    
+    }
+
+  }).catch(function (error) {
+    res.status(500).json({ "message": error.message });
+  });
+
+});
+
 
 
 module.exports = router;

@@ -131,6 +131,24 @@ let playlistService = {
         } catch (e) {
             console.error(e.message);
         }
+    },
+    async updatePlaylist(playlistId, userId, updates) {
+        try {
+            const foundPlaylist = await playlist.findOne({
+                _id: playlistId,
+                user: userId
+            });
+            if (!foundPlaylist) {
+                throw new Error('Playlist not found or you don\'t have permission to access it');
+            } else {
+                let result = await playlist.findByIdAndUpdate(playlistId, updates);
+                if (!result) return "Unable to find record to update.";
+                else return "Record is updated!";
+            }
+        } catch (e) {
+            console.error(e.message);
+            throw new Error("Error updating playlist");
+        }
     }
 
 }

@@ -71,6 +71,7 @@ $(async function () {
         $("#create-playlist-modal").hide();
         $("#delete-playlist-modal").hide();
         $("#archive-playlist-modal").hide();
+        $("#edit-playlist-modal").hide();
     });
 
     $("#addoption").on("click", function (e) {
@@ -89,6 +90,12 @@ $(async function () {
         e.preventDefault();
         e.stopPropagation();
         openArchivePlaylistModal();
+    });
+
+    $("#editoption").on("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        openEditPlaylistModal();
     });
 
     let response = await fetch(PLAYLISTS_URL + "?token=" + sessionStorage.token);
@@ -112,6 +119,7 @@ $(async function () {
     
 });
 
+// Search for tracks based on query
 async function searchTracks(query) {
     try {
         const response = await fetch(SEARCH_URL + "?q=" + query + "&token=" + sessionStorage.token, {
@@ -130,6 +138,7 @@ async function searchTracks(query) {
         $("#search-results").html("<p>An error occurred. Please try again.</p>");
     }
 }
+// Display notification message to user
 function showNotification(message, type = 'success', duration = 3000) {
     // Remove existing notification if any
     $('#notification').remove();
@@ -162,6 +171,7 @@ function showNotification(message, type = 'success', duration = 3000) {
     });
 }
 // Function to display search results
+// Display search results in UI
 function displaySearchResults(tracks) {
     const searchResults = $("#search-results");
     searchResults.empty();
@@ -192,8 +202,9 @@ function displaySearchResults(tracks) {
         searchResults.append(trackCard);
     });
 }
+    
 
-
+// Open modal to select playlist for adding track
 async function openPlaylistModal(trackId) {
     let modal = $("#playlist-modal");
 
@@ -257,6 +268,7 @@ async function openPlaylistModal(trackId) {
     }
 }
 
+// Add a track to a specific playlist
 async function addTrackToPlaylist(trackId, playlistId) {
 
     try {
@@ -280,6 +292,142 @@ async function addTrackToPlaylist(trackId, playlistId) {
 
 }
 
+// Open modal to edit a playlist
+async function openEditPlaylistModal() {
+    let modal = $("#edit-playlist-modal");
+
+    if (modal.length === 0) {
+        $("body").append(`
+            <div id="edit-playlist-modal" class="modal" tabindex="-1" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1050; background-color: rgba(0,0,0,0.5); justify-content: center; align-items: center;">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Edit Playlist</h5>
+                            <button type="button" class="btn-close close-modal" aria-label="Close" style="border: none; background: none; font-size: 1.5rem;">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div id="edit-modal-playlists-list" class="list-group">
+                                <p>Loading...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `);
+        modal = $("#edit-playlist-modal");
+    }
+
+    modal.css("display", "flex");
+
+    const playlistContainer = $("#edit-modal-playlists-list");
+    playlistContainer.html("<p>Loading...</p>");
+
+    try {
+        const response = await fetch(PLAYLISTS_URL + "?token=" + sessionStorage.token);
+        if (response.ok) {
+            const data = await response.json();
+            playlistContainer.empty();
+            if (data.success && data.playlists && data.playlists.length > 0) {
+                data.playlists.forEach(playlist => {
+                    const trackCount = playlist.tracks ? playlist.tracks.length : 0;
+                    const item = $(`
+                        <div class="list-group-item list-group-item-action">
+                            <div class="fw-bold">${playlist.name}</div>
+                            <div class="d-flex align-items-center mt-1">
+                                <small class="text-muted me-3">${trackCount} Tracks</small>
+                                <button class="btn btn-primary btn-sm edit-btn" style="padding: 0.8rem 1.5rem;">Edit</button>
+                            </div>
+                        </div>
+                    `);
+
+                    item.find(".edit-btn").on("click", function (e) {
+                        e.stopPropagation();
+                        const modalBody = modal.find(".modal-body");
+
+                        modalBody.html(`
+                            <div class="mb-3">
+                                <button type="button" class="btn btn-secondary btn-sm" id="back-edit-btn" style="margin: 0;"><i class="fas fa-arrow-left"></i> Back</button>
+                            </div>
+                            <form id="edit-playlist-form">
+                                <div class="mb-3">
+                                    <label for="edit-playlist-name" class="form-label">New Playlist Name</label>
+                                    <input type="text" class="form-control" id="edit-playlist-name" required>
+                                </div>
+                                <div class="d-flex justify-content-end">
+                                    <button type="submit" class="btn btn-primary" style="margin: 0;">Save</button>
+                                </div>
+                            </form>
+                        `);
+                        $("#edit-playlist-name").val(playlist.name).focus();
+
+                        $("#back-edit-btn").on("click", function () {
+                            modalBody.html('<div id="edit-modal-playlists-list" class="list-group"><p>Loading...</p></div>');
+                            openEditPlaylistModal();
+                        });
+
+                        $("#edit-playlist-form").on("submit", async function (ev) {
+                            ev.preventDefault();
+                            const newName = $("#edit-playlist-name").val();
+                            if (newName && newName.trim() !== "") {
+                                const success = await updatePlaylist(playlist._id, newName.trim());
+                                if (success) {
+                                    modalBody.html('<div id="edit-modal-playlists-list" class="list-group"><p>Loading...</p></div>');
+                                    openEditPlaylistModal();
+                                }
+                            }
+                        });
+                    });
+
+                    playlistContainer.append(item);
+                });
+            } else {
+                playlistContainer.append("<p>No playlists found.</p>");
+            }
+        } else {
+            playlistContainer.html("<p>Failed loading playlists.</p>");
+        }
+    } catch (error) {
+        console.error("Error loading playlists:", error);
+        playlistContainer.html("<p>Error loading playlists.</p>");
+    }
+}
+
+// Update playlist name
+async function updatePlaylist(playlistId, newName) {
+    try {
+        const response = await fetch(`${PLAYLISTS_URL}/${playlistId}?token=${sessionStorage.token}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name: newName })
+        });
+        const data = await response.json();
+        if (response.ok) {
+            showNotification(data.message ,'success');
+            // Refresh playlists (Deepseek R1)
+            let resp = await fetch(PLAYLISTS_URL + "?token=" + sessionStorage.token);
+            if (resp.ok) {
+                let d = await resp.json();
+                if (d.success) {
+                    displayPlaylists(d.playlists);
+                }
+            }
+            return true;
+        } else {
+            showNotification(data.message || "Failed to update playlist", 'error');
+            return false;
+        }
+    } catch (error) {
+        console.error("Error updating playlist:", error);
+        showNotification("Error updating playlist", 'error');
+        return false;
+    }
+}
+
+// Add a track to liked songs
 async function addToLikedSongs(trackId) {
     try {
         const response = await fetch(`${LIKED_SONGS_URL}/?token=${sessionStorage.token}`, {
@@ -300,6 +448,7 @@ async function addToLikedSongs(trackId) {
     }
 }
 
+// Open modal to archive a playlist
 async function openArchivePlaylistModal() {
     let modal = $("#archive-playlist-modal");
 
@@ -371,6 +520,7 @@ async function openArchivePlaylistModal() {
     }
 }
 
+// Archive a playlist
 async function archivePlaylist(playlistId) {
     try {
         const response = await fetch(`${PLAYLISTS_URL}/${playlistId}/archive?token=${sessionStorage.token}`, {
@@ -396,6 +546,7 @@ async function archivePlaylist(playlistId) {
     }
 }
 
+// Display playlists in UI
 function displayPlaylists(playlists) {
     const container = $("#user-playlists-container");
 
@@ -426,6 +577,7 @@ function displayPlaylists(playlists) {
     });
 }
 
+// Open modal to create a new playlist
 function openCreatePlaylistModal() {
     let modal = $("#create-playlist-modal");
 
@@ -469,6 +621,7 @@ function openCreatePlaylistModal() {
     modal.css("display", "flex");
 }
 
+// Create a new playlist
 async function createPlaylist(name) {
     try {
         const response = await fetch(PLAYLISTS_URL + '/create', {
@@ -495,6 +648,7 @@ async function createPlaylist(name) {
     }
 }
 
+// Open modal to delete a playlist
 async function openDeletePlaylistModal() {
     let modal = $("#delete-playlist-modal");
 
@@ -566,6 +720,7 @@ async function openDeletePlaylistModal() {
     }
 }
 
+// Delete a playlist
 async function deletePlaylist(playlistId) {
     try {
         const response = await fetch(`${PLAYLISTS_URL}/${playlistId}?token=${sessionStorage.token}`, {

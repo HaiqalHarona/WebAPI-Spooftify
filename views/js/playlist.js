@@ -94,6 +94,12 @@ $(async function () {
                     const playlist = data.playlists.find(p => p._id === playlistId);
                     if (playlist) {
                         $('#playlistname').text(playlist.name);
+                        let image = playlist.playlistpicture;
+                        if (!image && playlist.tracks && playlist.tracks.length > 0) {
+                            image = playlist.tracks[0].albumImage;
+                        }
+                        image = image || "";
+                        $('#playlist-image').css('background-image', image ? `url('${image}')` : 'none');
                         // console.log("Debug - Playlist Name:", playlist.name);
                     }
                 }
