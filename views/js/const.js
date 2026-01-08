@@ -18,3 +18,6 @@ const LIKED_SONGS_URL = `${BASE_URL}/api/liked-songs`;
 // Archive
 const ARCHIVE_URL = `${BASE_URL}/api/archives`;
 
+// Friends
+const FRIENDS_URL = `${BASE_URL}/api/users/friends`;
+

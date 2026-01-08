@@ -362,7 +362,7 @@ router.post('/api/archives/:id/unarchive', async function (req, res) {
 });
 
 // Add a song to user's liked songs
-router.post('/api/liked-songs', async function (req, res) {
+router.post('/api/liked-songs', async function (req, res) {wwwwwwwww
   try {
     const userId = res.locals.userId;
     const { spotifyTrackId } = req.body;
@@ -516,7 +516,7 @@ router.put('/api/playlists/:id', async function (req, res) {
         message: `Playlist updated to "${data.name}" successfully`,
         playlist: response
       });
-    
+
     }
 
   }).catch(function (error) {
@@ -525,6 +525,50 @@ router.put('/api/playlists/:id', async function (req, res) {
 
 });
 
+// Add Friend
+router.post('/api/users/friends', async function (req, res) {
+  const userId = res.locals.userId;
+  const friendId = req.body.friendId;
+
+  user.addFriend(userId, friendId)
+    .then(function (response) {
+      if (!response) {
+        res.status(404).json({ "message": "User not found" });
+      } else {
+        res.status(200).json({
+          success: true,
+          message: response
+        });
+      }
+    })
+    .catch(function (error) {
+      console.log(error.message);
+      res.status(500).json({ "message": error.message });
+    });
+});
+
+// Accept Friend Request
+router.put('/api/users/friends/:reqid', async function (req, res) {
+  const userId = res.locals.userId;
+  const friendId = req.params.reqid;
+
+  user.acceptFriend(userId, friendId)
+    .then(function (response) {
+      if(!response){
+        res.status(404).json({ "message": "User not found" });
+      } else {
+        res.status(200).json({
+          success: true,
+          message: response
+        });
+      }
+    })
+    .catch(function (error) {
+      console.log(error.message);
+      res.status(500).json({ "message": error.message });
+    })
+});
 
 
-module.exports = router;
+
+  module.exports = router;

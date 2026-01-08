@@ -146,7 +146,130 @@ let userservice = {
             console.error(e.message);
             throw new Error("Error updating user, please try again later.");
         }
+    },
+
+    async addFriend(userId, friendId) {
+        try {
+            if (userId == friendId) {
+                throw new Error("You cannot add yourself as a friend");
+            }
+            let findId = await user.findById(friendId);
+            if (!findId) {
+                throw new Error("User not found");
+            }
+            let sentRequest = await user.findOne({
+                _id: userId,
+                "friends.user": friendId,
+                "friends.status": "pending"
+            })
+            let existingFriend = await user.findOne({
+                _id: userId,
+                "friends.user": friendId,
+                "friends.status": "accepted"
+            });
+            if (existingFriend || sentRequest) {
+                throw new Error("User is already your friend or has a pending request");
+            } else {
+
+                let result = await user.findByIdAndUpdate(
+                    userId,
+                    {
+                        $push: {
+                            friends: {
+                                user: friendId,
+                                status: 'pending'
+                            }
+                        }
+                    },
+                    { new: true }
+                );
+                let sendRequest = await user.findByIdAndUpdate(
+                    friendId,
+                    {
+                        $push: {
+                            requests: {
+                                user: userId
+                            }
+                        }
+                    }
+                )
+
+                if (!result) {
+                    throw new Error("Unable to add friend");
+                }
+                if (!sendRequest) {
+                    throw new Error("Unable to send friend request");
+                }
+
+                return "Friend request sent successfully";
+
+            }
+        } catch (e) {
+            console.error(e.message);
+            throw new Error("Error adding friend, please try again later.");
+        }
+    },
+    async acceptFriend(userId, friendId) {
+        try {
+            // Check if the request exists for the current user
+            let findIncomingRequest = await user.findOne({
+                _id: userId,
+                "requests.user": friendId
+            });
+
+            if (!findIncomingRequest) {
+                throw new Error("Friend request not found");
+            }
+
+            // Update the sender's friend list status to accepted
+            await user.updateOne(
+                {
+                    _id: friendId,
+                    "friends.user": userId
+                },
+                {
+                    $set:
+                    {
+                        "friends.$.status": "accepted"
+                    }
+                }
+            );
+
+            // Update the receiver: remove from requests and add to friends
+            let updateReceiver = await user.findByIdAndUpdate(
+                userId,
+                {
+                    $pull:
+                    {
+                        requests:
+                        {
+                            user: friendId
+                        }
+                    },
+                    $push:
+                    {
+                        friends:
+                        {
+                            user: friendId, status: "accepted"
+                        }
+                    }
+                },
+                { new: true }
+            );
+
+            if (!updateReceiver) {
+                throw new Error("Unable to accept friend request");
+            }
+
+            return "Friend request accepted successfully";
+        } catch (e) {
+            console.error(e.message);
+            throw new Error("Error accepting friend: " + e.message);
+        }
+
     }
-}
+};
+
+
 
 module.exports = userservice;
