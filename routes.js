@@ -362,7 +362,8 @@ router.post('/api/archives/:id/unarchive', async function (req, res) {
 });
 
 // Add a song to user's liked songs
-router.post('/api/liked-songs', async function (req, res) {wwwwwwwww
+router.post('/api/liked-songs', async function (req, res) {
+  wwwwwwwww
   try {
     const userId = res.locals.userId;
     const { spotifyTrackId } = req.body;
@@ -548,13 +549,13 @@ router.post('/api/users/friends', async function (req, res) {
 });
 
 // Accept Friend Request
-router.put('/api/users/friends/:reqid', async function (req, res) {
+router.put('/api/users/friends/accept/:reqid', async function (req, res) {
   const userId = res.locals.userId;
   const friendId = req.params.reqid;
 
   user.acceptFriend(userId, friendId)
     .then(function (response) {
-      if(!response){
+      if (!response) {
         res.status(404).json({ "message": "User not found" });
       } else {
         res.status(200).json({
@@ -569,6 +570,50 @@ router.put('/api/users/friends/:reqid', async function (req, res) {
     })
 });
 
+// Reject Friend Request
+router.put('/api/users/friends/reject/:reqid', async function (req, res) {
+  const userId = res.locals.userId;
+  const friendId = req.params.reqid;
+
+  user.rejectFriend(userId, friendId)
+    .then(function (response) {
+      if (!response) {
+        res.status(404).json({ "message": "User not found" });
+      } else {
+        res.status(200).json({
+          success: true,
+          message: response
+        });
+      }
+  })
+  .catch(function (error) {
+    console.log(error.message);
+    res.status(500).json({ "message": error.message });
+  })
+  
+})
+
+// Remove Friend
+router.put('/api/users/friends/remove/:reqid', async function (req, res) {
+  const userId = res.locals.userId;
+  const friendId = req.params.reqid;
+
+  user.removeFriend(userId, friendId)
+  .then(function (response) {
+    if(!response){
+      res.status(404).json({ "message": "User not found" });
+    } else {
+      res.status(200).json({
+        success: true,
+        message: response
+      });
+    
+    }
+  }).catch(function (error) {
+    console.log(error.message);
+    res.status(500).json({ "message": error.message });
+  });
+})
 
 
-  module.exports = router;
+module.exports = router;

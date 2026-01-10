@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const user = require('../models/user.js');
+const e = require('express');
 
 let userservice = {
 
@@ -235,7 +236,7 @@ let userservice = {
                 }
             );
 
-            // Update the receiver: remove from requests and add to friends
+            // Remove from requests and add to friends
             let updateReceiver = await user.findByIdAndUpdate(
                 userId,
                 {
@@ -267,6 +268,101 @@ let userservice = {
             throw new Error("Error accepting friend: " + e.message);
         }
 
+    },
+    async rejectFriend(userId, friendId) {
+        try {
+            // Check if the request exists for the current user
+            let findIncomingRequest = await user.findOne({
+                _id: userId,
+                "requests.user": friendId
+            });
+
+            if (!findIncomingRequest) {
+                throw new Error("Friend request not found");
+            }
+            // Remove and delete friendId's request
+            let updateReciever = await user.findByIdAndUpdate(
+                userId,
+                {
+                    $pull:
+                    {
+                        requests:
+                        {
+                            user: friendId
+                        }
+                    }
+                }
+            )
+            // Remove and delete userId's friend
+            let updateSender = await user.findByIdAndUpdate(
+                friendId,
+                {
+                    $pull:
+                    {
+                        friends:
+                        {
+                            user: userId
+                        }
+                    }
+                }
+            )
+
+            if (!updateSender) {
+                console.error(e.message);
+                throw new Error("Unable to reject friend request");
+            }
+
+            if (!updateReciever) {
+                console.error(e.message);
+                throw new Error("Unable to reject friend request");
+            }
+
+            return "Friend request rejected successfully";
+        } catch (e) {
+            console.error(e.message);
+            throw new Error("Error rejecting friend request: " + e.message);
+        }
+    },
+    async removeFriend(userId, friendId) {
+        try {
+            let validateFriend = await user.findOne({
+                _id: userId,
+                "friends.user": friendId
+            });
+            if (!validateFriend) {
+                throw new Error("Friend not found");
+            }
+            // Remove friend from list vice versa
+            let updateFriend = await user.findByIdAndUpdate(
+                friendId, {
+                $pull: {
+                    friends: {
+                        user: userId
+                    }
+                }
+            }
+            )
+            let updateSender = await user.findByIdAndUpdate(
+                userId, {
+                $pull: {
+                    friends: {
+                        user: friendId
+                    }
+                }
+            }
+            )
+            if (!updateFriend) {
+                throw new Error("Unable to remove friend");
+            }
+            if (!updateSender) {
+                throw new Error("Unable to remove friend");
+            }
+
+            return "Removed friend successfully";
+        } catch (e) {
+            console.error(e.message);
+            throw new Error("Error removing friend: " + e.message);
+        }
     }
 };
 
