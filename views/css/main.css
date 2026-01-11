@@ -137,12 +137,14 @@
 }
 
 .btn-like,
-.btn-add-playlist {
+.btn-add-playlist,
+.btn-share {
     transition: all 0.3s ease;
 }
 
 .btn-like:hover,
-.btn-add-playlist:hover {
+.btn-add-playlist:hover,
+.btn-share:hover {
     padding-left: 20px !important;
     padding-right: 20px !important;
     border-radius: 50px !important;
@@ -304,6 +306,12 @@
     display: flex;
     flex-direction: column;
     align-items: flex-end;
+}
+
+.fab-container.left {
+    right: auto;
+    left: 50px;
+    align-items: flex-start;
 }
 
 .fab-button {

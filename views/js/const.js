@@ -21,3 +21,5 @@ const ARCHIVE_URL = `${BASE_URL}/api/archives`;
 // Friends
 const FRIENDS_URL = `${BASE_URL}/api/users/friends`;
 
+// Users
+const USERS_URL = `${BASE_URL}/api/users`;

@@ -363,7 +363,25 @@ let userservice = {
             console.error(e.message);
             throw new Error("Error removing friend: " + e.message);
         }
-    }
+    },
+    async searchUsers(query, currentUserId) {
+        try {
+            let users = await user.find({
+                $or: [
+                    { username: { $regex: query, $options: "i" } },
+                    { email: { $regex: query, $options: "i" } }
+                ],
+             _id: { $ne: currentUserId }
+
+        }).select("username email userpicture -_id");
+
+    return users;
+
+} catch (e) {
+    console.error(e.message);
+    throw new Error("Error searching users: " + e.message);
+}
+}
 };
 
 

@@ -62,6 +62,7 @@ $(async function () {
             const trackId = $(this).closest(".track-card").data("track-id");
             addToLikedSongs(trackId);
         });
+
     } else {
         console.error("#search-results element not found!");
     }
@@ -112,12 +113,17 @@ $(async function () {
             $("#liked-songs-count").text((likedSongsData.count || 0) + " Tracks");
         }
 
-    }catch (error) {
+    } catch (error) {
         console.error("Error fetching liked songs count:", error);
     }
-    
-    
+
+
 });
+
+// --- Helper Functions ---
+
+// Display friends list
+
 
 // Search for tracks based on query
 async function searchTracks(query) {
@@ -171,7 +177,6 @@ function showNotification(message, type = 'success', duration = 3000) {
     });
 }
 // Function to display search results
-// Display search results in UI
 function displaySearchResults(tracks) {
     const searchResults = $("#search-results");
     searchResults.empty();
@@ -195,6 +200,7 @@ function displaySearchResults(tracks) {
                 <div class="card-actions d-flex justify-content-around p-2">
                     <button class="btn btn-outline-danger btn-sm rounded-circle btn-like" title="Like"><i class="fa fa-heart"></i></button>
                     <button class="btn btn-outline-primary btn-sm rounded-circle btn-add-playlist" title="Add to Playlist"><i class="fa fa-plus"></i></button>
+                    <button class="btn btn-outline-primary btn-sm rounded-circle btn-share" title="Share"><i><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-share-fill" viewBox="0 0 16 16"><path d="M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.5 2.5 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5"/></svg></i></button>
                 </div>
             </div>
         `);
@@ -202,7 +208,7 @@ function displaySearchResults(tracks) {
         searchResults.append(trackCard);
     });
 }
-    
+
 
 // Open modal to select playlist for adding track
 async function openPlaylistModal(trackId) {
@@ -406,7 +412,7 @@ async function updatePlaylist(playlistId, newName) {
         });
         const data = await response.json();
         if (response.ok) {
-            showNotification(data.message ,'success');
+            showNotification(data.message, 'success');
             // Refresh playlists (Deepseek R1)
             let resp = await fetch(PLAYLISTS_URL + "?token=" + sessionStorage.token);
             if (resp.ok) {
@@ -443,8 +449,8 @@ async function addToLikedSongs(trackId) {
             showNotification(data.message || "Failed to add to Liked Songs", 'error');
         }
     } catch (error) {
-        console.error("Error adding to liked songs:", error);
-        showNotification("Error adding to liked songs", 'error');
+        console.error("Error adding to liked songs: ", error);
+        showNotification(`Error adding to liked songs: ${error.message}`, 'error');
     }
 }
 

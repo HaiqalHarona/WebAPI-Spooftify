@@ -363,7 +363,6 @@ router.post('/api/archives/:id/unarchive', async function (req, res) {
 
 // Add a song to user's liked songs
 router.post('/api/liked-songs', async function (req, res) {
-  wwwwwwwww
   try {
     const userId = res.locals.userId;
     const { spotifyTrackId } = req.body;
@@ -609,6 +608,28 @@ router.put('/api/users/friends/remove/:reqid', async function (req, res) {
       });
     
     }
+  }).catch(function (error) {
+    console.log(error.message);
+    res.status(500).json({ "message": error.message });
+  });
+})
+
+// Search Users
+router.get('/api/users/search/:query', async function (req, res) {
+  const query = req.params.query;
+  const userId = res.locals.userId;
+
+  user.searchUsers(query, userId)
+    .then(function (response) {
+      if (!response) {
+        res.status(404).json({ "message": "User not found" });
+      } else {
+        res.status(200).json({
+          success: true,
+          message: response
+        });
+      }
+    
   }).catch(function (error) {
     console.log(error.message);
     res.status(500).json({ "message": error.message });
