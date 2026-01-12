@@ -207,6 +207,9 @@ let userservice = {
             }
         } catch (e) {
             console.error(e.message);
+            if (e.message === "User is already your friend or has a pending request" || e.message === "You cannot add yourself as a friend" || e.message === "User not found") {
+                throw e;
+            }
             throw new Error("Error adding friend, please try again later.");
         }
     },
@@ -371,16 +374,40 @@ let userservice = {
                     { username: { $regex: query, $options: "i" } },
                     { email: { $regex: query, $options: "i" } }
                 ],
-             _id: { $ne: currentUserId }
+                _id: { $ne: currentUserId }
 
-        }).select("username email userpicture -_id");
+            }).select("username email userpicture _id");
 
-    return users;
+            return users;
 
-} catch (e) {
-    console.error(e.message);
-    throw new Error("Error searching users: " + e.message);
-}
+        } catch (e) {
+            console.error(e.message);
+            throw new Error("Error searching users: " + e.message);
+        }
+    },
+    async getRequests(userId) {
+        try {
+            let userDoc = await user.findById(userId).select("requests").populate('requests.user', 'username email userpicture');
+            if (!userDoc) {
+                throw new Error("Unable to get requests");
+            }
+            return userDoc.requests;
+        } catch (e) {
+            console.error(e.message);
+            throw new Error("Error getting requests: " + e.message);
+        }
+    },
+    async getFriends(userId) {
+        try {
+            let userDoc = await user.findById(userId).select("friends").populate('friends.user', 'username email userpicture');
+            if (!userDoc) {
+                throw new Error("Unable to get friends");
+            }
+            return userDoc.friends;
+        } catch (e) {
+            console.error(e.message);
+            throw new Error("Error getting friends: " + e.message);
+        }
 }
 };
 

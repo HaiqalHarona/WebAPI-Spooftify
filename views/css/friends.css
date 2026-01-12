@@ -57,8 +57,7 @@ h3 {
 }
 
 /* User Cards */
-.user-card,
-.request-card {
+.user-card {
     background: var(--dark-gray);
     padding: 15px;
     border-radius: 8px;
@@ -66,7 +65,7 @@ h3 {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 12px;
-    transition: background 0.3s;
+    transition: all 0.3s;
 }
 
 .user-card:hover {
@@ -103,9 +102,27 @@ h3 {
     padding: 6px 12px;
     border-radius: 4px;
     cursor: pointer;
+    transition: all 0.2s ease;
 }
 
 .action-btn.remove:hover {
+    border-color: #ff4d4d;
+    color: #ff4d4d;
+}
+
+.action-btn.accept {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+    margin-right: 5px;
+}
+
+.action-btn.accept:hover {
+    background-color: #1ed760;
+    transform: scale(1.05);
+}
+
+.action-btn.reject:hover {
     border-color: #ff4d4d;
     color: #ff4d4d;
 }
@@ -116,6 +133,8 @@ h3 {
     padding: 3px 8px;
     border-radius: 10px;
     text-transform: uppercase;
+    color: #b3b3b3;
+    margin-right: 10px;
 }
 
 .cancel-btn {
@@ -131,25 +150,39 @@ h3 {
     color: white;
 }
 
-.Accept-btn {
-    background: var(--primary-color);
+#notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 25px;
+    background-color: #4CAF50;
     color: white;
-    border: none;
-    padding: 8px;
-    border-radius: 8px;
-    font-weight: bold;
-}
-.Reject-btn{
-    background-color: red;
-    color: white;
-    border: none;
-    padding: 8px;
-    border-radius: 8px;
-    font-weight: bold;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 10000;
+    max-width: 300px;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: opacity 0.3s, transform 0.3s;
 }
 
-.Accept-btn:hover, .Reject-btn:hover{
-    transition: all 0.3s ease;
-    transform: scale(1.05);
+#notification.show {
+    opacity: 1;
+    transform: translateX(0);
+}
 
+#notification.error {
+    background-color: #f44336;
+}
+
+#notification.success {
+    background-color: #4CAF50;
+}
+
+#notification.warning {
+    background-color: #ff9800;
+}
+
+#notification.info {
+    background-color: #2196F3;
 }

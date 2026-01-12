@@ -1,19 +1,52 @@
 $(async function () {
+    getFriends();
+    getFriendRequests();
+    getSendRequests();
+
     const searchInput = $("#search-input");
-    const addbtn = $("#addUserbtn");
+
+    $(".search-results").on("click", ".action-btn.add", function (event) {
+        event.preventDefault();
+        const userCard = $(this).closest('.user-card');
+        const userId = userCard.data('user-id');
+        addFriend(userId);
+    });
+
     searchInput.on("keyup", function () {
         const query = searchInput.val();
         searchUsers(query);
         if (query === "") {
             $(".search-results").empty();
         }
-        addbtn.on("click", function (event) {
-            const userCard = event.target.closest('.user-card');
-            const userId = userCard.getAttribute('data-user-id');
-            console.log(userId);
-        })
     });
 
+    $(".friends-list").on("click", ".action-btn.remove", function (event) {
+        event.preventDefault();
+        const userCard = $(this).closest('.user-card');
+        const userId = userCard.attr('data-user-id');
+        removeFriend(userId);
+    });
+
+    $(".requests-list.incoming").on("click", ".action-btn.accept", function (event) {
+        event.preventDefault();
+        const userCard = $(this).closest('.user-card');
+        const userId = userCard.attr('data-user-id');
+        acceptFriend(userId);
+    });
+
+    $(".requests-list.incoming").on("click", ".action-btn.reject", function (event) {
+        event.preventDefault();
+        const userCard = $(this).closest('.user-card');
+        const userId = userCard.attr('data-user-id');
+        rejectFriend(userId);
+    });
+
+    $(".requests-list.sent").on("click", ".action-btn.remove", function (event) {
+        event.preventDefault();
+        const userCard = $(this).closest('.user-card');
+        const userId = userCard.attr('data-user-id');
+        removeFriend(userId);
+    });
 })
 
 
@@ -84,32 +117,180 @@ function displaySearchUsers(users) {
                         <p class="email" style="font-size: 0.8em; color: #b3b3b3;">${user.email}</p>
                     </div>
                 </div>
-                <button class="action-btn add" id="addUserbtn">Add</button>
+                <button class="action-btn add">Add</button>
             </div>
         `;
 
         searchResultsContainer.append(userCardHtml);
     });
-    async function addFriend(friendId) {
-        try {
-            let response = await fetch(`${FRIEND_URL}?token=${sessionStorage.token}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ friendId: friendId })
-            });
-            if (response.ok) {
-                let data = await response.json();
-                showNotification(data.message, 'success');
-            } else {
-                showNotification("Failed to add friend: " + error.message, 'error');
-            }
+}
 
-
-        } catch (error) {
-            console.error("Error adding friend:", error);
-            showNotification("Failed to add friend: " + error.message, 'error');
+async function addFriend(friendId) {
+    try {
+        let response = await fetch(`${FRIENDS_URL}?token=${sessionStorage.token}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ friendId: friendId })
+        });
+        if (response.ok) {
+            let data = await response.json();
+            showNotification(data.message, 'success');
+        } else {
+            let data = await response.json();
+            showNotification("Failed to add friend: " + (data.message || "Unknown error"), 'error');
         }
+    } catch (error) {
+        console.error("Error adding friend:", error);
+        showNotification("Failed to add friend: " + error.message, 'error');
     }
+}
+
+async function getFriends() {
+    try {
+        const response = await fetch(`${USERS_URL}/friends?token=${sessionStorage.token}`);
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+            const friends = data.message.filter(f => f.status === 'accepted');
+            displayFriends(friends);
+        }
+    } catch (error) {
+        console.error("Error getting friends:", error);
+    }
+}
+
+async function getSendRequests() {
+    try {
+        const response = await fetch(`${USERS_URL}/friends?token=${sessionStorage.token}`);
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+            const sentRequests = data.message.filter(f => f.status === 'pending');
+            displaySendRequests(sentRequests);
+        }
+    } catch (error) {
+        console.error("Error getting friends:", error);
+    }
+}
+
+async function getFriendRequests() {
+    try {
+        const response = await fetch(`${USERS_URL}/requests?token=${sessionStorage.token}`);
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+            displayFriendRequests(data.message);
+        }
+    } catch (error) {
+        console.error("Error getting friend requests:", error);
+    }
+}
+
+function displayFriends(friends) {
+    const friendslistContainer = $(".friends-list");
+
+    if (!friends || friends.length === 0) {
+        friendslistContainer.html('<p style="color: #b3b3b3; padding: 1rem;">No friends yet.</p>');
+        return;
+    }
+
+    friends.forEach(friendship => {
+        const friend = friendship.user;
+        if (!friend) return;
+
+        const avatarStyle = friend.profilepicture ? `background-image: url('${friend.profilepicture}'); background-size: cover; background-position: center;` : '';
+
+        const friendCardHtml = `
+            <div class="user-card" data-user-id="${friend._id}">
+                <div class="user-info">
+                    <div class="avatar" style="${avatarStyle}"></div>
+                    <div>
+                        <p class="username">${friend.username}</p>
+                        <p class="email" style="font-size: 0.8em; color: #b3b3b3;">${friend.email}</p>
+                    </div>
+                </div>
+                <button class="action-btn remove">Remove</button>
+            </div>
+        `;
+        friendslistContainer.append(friendCardHtml);
+    });
+}
+
+function displayFriendRequests(requests) {
+    const requestsContainer = $(".requests-list.incoming");
+    requestsContainer.empty();
+
+    if (!requests || requests.length === 0) {
+        requestsContainer.html('<p style="color: #b3b3b3; padding: 1rem;">No pending requests.</p>');
+        return;
+    }
+
+    requests.forEach(req => {
+        const requester = req.user;
+        if (!requester) return;
+
+        const avatarStyle = requester.profilepicture ? `background-image: url('${requester.profilepicture}'); background-size: cover; background-position: center;` : '';
+
+        const requestCardHtml = `
+            <div class="user-card" data-user-id="${requester._id}">
+                <div class="user-info">
+                    <div class="avatar" style="${avatarStyle}"></div>
+                    <div>
+                        <p class="username">${requester.username}</p>
+                        <p class="email" style="font-size: 0.8em; color: #b3b3b3;">${requester.email}</p>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button class="action-btn accept">Accept</button>
+                    <button class="action-btn reject">Reject</button>
+                </div>
+            </div>
+        `;
+        requestsContainer.append(requestCardHtml);
+    });
+}
+
+function displaySendRequests(requests) {
+    const requestsContainer = $(".requests-list.sent");
+    requestsContainer.empty();
+
+    if (!requests || requests.length === 0) {
+        requestsContainer.html('<p style="color: #b3b3b3; padding: 1rem;">No sent requests.</p>');
+        return;
+    }
+
+    requests.forEach(req => {
+        const requester = req.user;
+        if (!requester) return;
+
+        const avatarStyle = requester.profilepicture ? `background-image: url('${requester.profilepicture}'); background-size: cover; background-position: center;` : '';
+
+        const requestCardHtml = `
+            <div class="user-card" data-user-id="${requester._id}">
+                <div class="user-info">
+                    <div class="avatar" style="${avatarStyle}"></div>
+                    <div>
+                        <p class="username">${requester.username}</p>
+                        <p class="email" style="font-size: 0.8em; color: #b3b3b3;">${requester.email}</p>
+                    </div>
+                </div>
+                <span class="pending-tag">Pending</span>
+            </div>
+        `;
+        requestsContainer.append(requestCardHtml);
+    });
+}
+
+async function acceptFriend(friendId) {
+
+}
+
+async function rejectFriend(friendId) {
+
+}
+
+async function removeFriend(friendId) {
+
 }

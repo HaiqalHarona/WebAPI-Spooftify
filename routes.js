@@ -584,12 +584,12 @@ router.put('/api/users/friends/reject/:reqid', async function (req, res) {
           message: response
         });
       }
-  })
-  .catch(function (error) {
-    console.log(error.message);
-    res.status(500).json({ "message": error.message });
-  })
-  
+    })
+    .catch(function (error) {
+      console.log(error.message);
+      res.status(500).json({ "message": error.message });
+    })
+
 })
 
 // Remove Friend
@@ -598,20 +598,20 @@ router.put('/api/users/friends/remove/:reqid', async function (req, res) {
   const friendId = req.params.reqid;
 
   user.removeFriend(userId, friendId)
-  .then(function (response) {
-    if(!response){
-      res.status(404).json({ "message": "User not found" });
-    } else {
-      res.status(200).json({
-        success: true,
-        message: response
-      });
-    
-    }
-  }).catch(function (error) {
-    console.log(error.message);
-    res.status(500).json({ "message": error.message });
-  });
+    .then(function (response) {
+      if (!response) {
+        res.status(404).json({ "message": "User not found" });
+      } else {
+        res.status(200).json({
+          success: true,
+          message: response
+        });
+
+      }
+    }).catch(function (error) {
+      console.log(error.message);
+      res.status(500).json({ "message": error.message });
+    });
 })
 
 // Search Users
@@ -629,12 +629,55 @@ router.get('/api/users/search/:query', async function (req, res) {
           message: response
         });
       }
-    
-  }).catch(function (error) {
-    console.log(error.message);
-    res.status(500).json({ "message": error.message });
-  });
+
+    }).catch(function (error) {
+      console.log(error.message);
+      res.status(500).json({ "message": error.message });
+    });
 })
+
+// Get User Requests
+router.get('/api/users/requests', async function (req, res) {
+  const userId = res.locals.userId;
+
+  user.getRequests(userId)
+    .then(function (response) {
+      if (!response) {
+        res.status(404).json({ "message": "User not found" });
+      } else {
+        res.status(200).json({
+          success: true,
+          message: response
+        });
+      }
+    }).catch((function (error) {
+      console.log(error.message);
+      res.status(500).json({ "message": error.message });
+    }));
+
+});
+
+// Get User Friends
+router.get('/api/users/friends', async function (req, res) {
+  const userId = res.locals.userId;
+
+  user.getFriends(userId)
+    .then(function (response) {
+      if (!response) {
+        res.status(404).json({ "message": "User not found" });
+      } else {
+        res.status(200).json({
+          success: true,
+          message: response
+        });
+      }
+    }).catch(function (error) {
+      console.log(error.message);
+      res.status(500).json({ "message": error.message });
+    });
+});
+
+
 
 
 module.exports = router;
