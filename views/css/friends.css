@@ -57,7 +57,8 @@ h3 {
 }
 
 /* User Cards */
-.user-card, .request-card {
+.user-card,
+.request-card {
     background: var(--dark-gray);
     padding: 15px;
     border-radius: 8px;
@@ -130,9 +131,25 @@ h3 {
     color: white;
 }
 
-/* Mobile Responsiveness */
-@media (max-width: 768px) {
-    .friends-grid {
-        grid-template-columns: 1fr;
-    }
+.Accept-btn {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 8px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+.Reject-btn{
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 8px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.Accept-btn:hover, .Reject-btn:hover{
+    transition: all 0.3s ease;
+    transform: scale(1.05);
+
 }
