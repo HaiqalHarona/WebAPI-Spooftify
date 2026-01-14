@@ -15,22 +15,25 @@ archivedChat = new mongoose.Schema({
     },
 
     Messages: [{
-        sender: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'users',
-            required: true
-        },
-        receiver: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'users',
-            required: true
-        },
-        content: {
-            type: String,
-            required: true,
-            trim: true
-        },
-    }]
+        sender: [{
+            sendee: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'users',
+                required: true
+            },
+            songurl: String,
+
+        }],
+        receiver: [{
+            recievee: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'users',
+                required: true
+            },
+            songurl: String,
+
+        }]
+    }],
 });
 
 module.exports = mongoose.model('archivedChat', archivedChat);

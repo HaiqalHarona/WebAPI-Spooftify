@@ -186,3 +186,22 @@ h3 {
 #notification.info {
     background-color: #2196F3;
 }
+.requests-section {
+    margin-left: 40px;
+    background-color: #1f1f1f;
+    box-shadow: 0 4px 6px rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.requests-section:hover {
+    transform: scale(1.03);
+    transition: 0.3s ease-in-out;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 5px;
+    justify-items: center;
+    margin-left: 10px;
+}

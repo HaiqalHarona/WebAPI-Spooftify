@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const user = require('../models/user.js');
-const e = require('express');
 
 let userservice = {
 
@@ -225,7 +224,6 @@ let userservice = {
                 throw new Error("Friend request not found");
             }
 
-            // Update the sender's friend list status to accepted
             await user.updateOne(
                 {
                     _id: friendId,
@@ -239,30 +237,44 @@ let userservice = {
                 }
             );
 
-            // Remove from requests and add to friends
-            let updateReceiver = await user.findByIdAndUpdate(
-                userId,
-                {
-                    $pull:
+            const existingFriendIndex = findIncomingRequest.friends.findIndex(f => f.user.toString() === friendId);
+
+            if (existingFriendIndex !== -1) {
+                await user.updateOne(
+                    { _id: userId, "friends.user": friendId },
                     {
-                        requests:
+                        $set: { "friends.$.status": "accepted" },
+                        $pull: { requests: { user: friendId } }
+                    }
+                );
+            } else {
+                // Remove from requests and add to friends
+                let updateReceiver = await user.findOneAndUpdate(
+                    {
+                        _id: userId,
+                        "requests.user": friendId
+                    },
+                    {
+                        $pull:
                         {
-                            user: friendId
+                            requests:
+                            {
+                                user: friendId
+                            }
+                        },
+                        $push:
+                        {
+                            friends:
+                            {
+                                user: friendId, status: "accepted"
+                            }
                         }
                     },
-                    $push:
-                    {
-                        friends:
-                        {
-                            user: friendId, status: "accepted"
-                        }
-                    }
-                },
-                { new: true }
-            );
-
-            if (!updateReceiver) {
-                throw new Error("Unable to accept friend request");
+                    { new: true }
+                );
+                if (!updateReceiver) {
+                    throw new Error("Unable to accept friend request");
+                }
             }
 
             return "Friend request accepted successfully";
