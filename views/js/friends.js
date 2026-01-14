@@ -284,7 +284,18 @@ function displaySendRequests(requests) {
 }
 
 async function acceptFriend(friendId) {
-
+    try {
+        let response = await fetch(`${FRIENDS_URL}/accept/${friendId}?token=${sessionStorage.token}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ status: 'accepted' })
+        });
+        
+    } catch (error) {
+        console.error("Error accepting friend:", error);
+    }
 }
 
 async function rejectFriend(friendId) {
