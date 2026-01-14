@@ -4,6 +4,7 @@ const archived = require('../models/archivedplaylist.js');
 const lyrics = require('../models/cachedLyrics.js');
 const user = require('../models/user.js');
 const likedSongs = require('../models/likedsongs.js');
+const archivedChat = require('../models/archivedchat.js')
 
 
 let db = {
