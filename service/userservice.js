@@ -420,7 +420,24 @@ let userservice = {
             console.error(e.message);
             throw new Error("Error getting friends: " + e.message);
         }
-}
+    },
+    async validateFriendship(userId, friendId) {
+        try {
+            let friendship = await user.findOne({
+                _id: userId,
+                friends: {
+                    $elemMatch: {
+                        user: friendId,
+                        status: "accepted"
+                    }
+                }
+            });
+            return friendship;
+        } catch (e) {
+            console.error(e.message);
+            throw new Error("Error validating friendship: " + e.message);
+        }
+    }
 };
 
 

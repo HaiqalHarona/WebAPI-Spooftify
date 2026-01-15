@@ -23,3 +23,6 @@ const FRIENDS_URL = `${BASE_URL}/api/users/friends`;
 
 // Users
 const USERS_URL = `${BASE_URL}/api/users`;
+
+// Messages
+const MESSAGES_URL = `${BASE_URL}/api/messages`;

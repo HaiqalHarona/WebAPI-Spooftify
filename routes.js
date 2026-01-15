@@ -7,6 +7,7 @@ const lyrics = require('./service/lyricsservice.js');
 const user = require('./service/userservice.js');
 const playlist = require('./service/playlistservice.js');
 const likedSongs = require('./service/likedsongservice.js');
+const chat = require('./service/archivedchatservice.js');
 const crypto = require('crypto');
 const cors = require('cors');
 
@@ -675,6 +676,31 @@ router.get('/api/users/friends', async function (req, res) {
       console.log(error.message);
       res.status(500).json({ "message": error.message });
     });
+});
+
+// Send Messages
+router.post('/api/messages/send', async function (req, res) {
+  try {
+    const senderId = res.locals.userId;
+    const receiverId = req.body.receiverId;
+    const trackUrl = req.body.url;
+
+    const validate = await user.validateFriendship(senderId, receiverId);
+    if (!validate) {
+      console.error('Users are not friends');
+      return res.status(403).json({ "message": "You can only send messages to your friends." });
+    }
+
+    const result = await chat.shareSongUrl(senderId, receiverId, trackUrl);
+
+    res.status(201).json({
+      success: true,
+      data: result
+    });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ "message": error.message });
+  }
 });
 
 
