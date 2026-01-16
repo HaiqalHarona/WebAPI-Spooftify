@@ -703,6 +703,81 @@ router.post('/api/messages/send', async function (req, res) {
   }
 });
 
+// Get Messages
+router.get('/api/messages/:user2Id', async function (req, res) {
+  const user1Id = res.locals.userId;
+  const user2Id = req.params.user2Id;
+
+  try {
+    const messages = await chat.getChatBetweenUsers(user1Id, user2Id);
+
+    if (!messages) {
+      return res.status(404).json({
+        success: false,
+        message: "No chat found between the users"
+      });
+    } else {
+      res.status(200).json({
+        success: true,
+        chat: messages
+      });
+    }
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ "message": error.message });
+  }
+
+});
+
+// Get Chats
+router.get('/api/messages/chat/:userId', async function (req, res) {
+  const userId = req.params.userId;
+  try {
+    const chats = await chat.getUserChats(userId);
+    if (!chats) {
+      res.status(404).json({
+        success: false,
+        message: "No chats found"
+      });
+    } else {
+      res.status(200).json({
+        success: true,
+        chats: chats
+      });
+
+    }
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ "message": error.message });
+  }
+});
+
+// Get Chat Messages (by Chat ID) Redundant with previous route
+router.post('/api/messages/chat', async function (req, res) {
+  const user1Id = res.locals.userId;
+  const chatId = req.body.chatId;
+  const user2Id = req.body.user2Id;
+
+
+  try {
+    const messages = await chat.getChatMessages(chatId, user1Id, user2Id);
+    if (!messages) {
+      res.status(404).json({
+        success: false,
+        message: "No messages found"
+      });
+    } else {
+      res.status(200).json({
+        success: true,
+        messages: messages
+      });
+    }
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ "message": error.message });
+  }
+});
+
 
 
 

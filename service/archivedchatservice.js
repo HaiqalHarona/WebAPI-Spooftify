@@ -8,7 +8,7 @@ let archivedChatService = {
             if (!mongoose.Types.ObjectId.isValid(senderId) ||
                 !mongoose.Types.ObjectId.isValid(receiverId)) {
                 throw new Error('Invalid user ID format');
-            }else if(senderId.toString() === receiverId.toString()){
+            } else if (senderId.toString() === receiverId.toString()) {
                 throw new Error('Sender and receiver cannot be the same');
             }
 
@@ -34,7 +34,7 @@ let archivedChatService = {
                 await chat.save();
                 return {
                     success: true,
-                    message: "Message added to existing chat",
+                    message: "Message sent to recipient",
                     chatId: chat._id
                 };
             } else {
@@ -88,15 +88,30 @@ let archivedChatService = {
         }
     },
 
-    async getChatMessages(chatId, limit = 50) {
+    async getChatMessages(chatId, user1Id, user2Id) {
         try {
+            const restricted = await Chat.findOne({
+                _id: chatId,
+                participants: {
+                    $all: [
+                        new mongoose.Types.ObjectId(user1Id),
+                        new mongoose.Types.ObjectId(user2Id)
+                    ]
+                }
+            });
+
+            if (!restricted) {
+                throw new Error('You do not have access to these messages.');
+            }
+
             const chat = await Chat.findById(chatId)
                 .populate('Messages.from Messages.to', 'username')
                 .select('Messages');
 
             if (!chat) return null;
 
-            return chat.Messages.slice(-limit);
+            return chat.Messages;
+
         } catch (error) {
             console.error('Error in getChatMessages:', error);
             throw error;

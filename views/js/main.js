@@ -63,6 +63,13 @@ $(async function () {
             addToLikedSongs(trackId);
         });
 
+        $("#search-results").on("click", ".btn-share", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const trackId = $(this).closest(".track-card").data("track-id");
+            openShareModal(trackId);
+        });
+
     } else {
         console.error("#search-results element not found!");
     }
@@ -751,4 +758,110 @@ async function deletePlaylist(playlistId) {
         showNotification("Error deleting playlist", 'error');
     }
 
+}
+async function openShareModal(trackId) {
+    let modal = $("#share-modal");
+
+    if (modal.length === 0) {
+        $("body").append(`
+            <div id="share-modal" class="modal" tabindex="-1" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1050; background-color: rgba(0,0,0,0.5); justify-content: center; align-items: center;">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Share with Friend</h5>
+                            <button type="button" class="btn-close close-modal" aria-label="Close" style="border: none; background: none; font-size: 1.5rem;">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div id="share-modal-friends-list" class="list-group">
+                                <p>Loading...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `);
+        modal = $("#share-modal");
+
+        modal.find(".close-modal").on("click", function () {
+            modal.hide();
+        });
+    }
+
+    modal.css("display", "flex");
+
+    getFriends(trackId);
+}
+
+async function getFriends(trackId) {
+    const friendsListContainer = $("#share-modal-friends-list");
+    friendsListContainer.html("<p>Loading...</p>");
+
+    try {
+        const response = await fetch(`${FRIENDS_URL}?token=${sessionStorage.token}`);
+        if (response.ok) {
+            const data = await response.json();
+
+            if (data.success && data.message) {
+                const friends = data.message.filter(f => f.status === 'accepted');
+                displayShareFriends(friends, trackId);
+            } else {
+                friendsListContainer.html("<p>No friends found.</p>");
+            }
+        } else {
+            friendsListContainer.html("<p>Failed to load friends.</p>");
+        }
+    } catch (error) {
+        console.error("Error loading friends:", error);
+        friendsListContainer.html("<p>Error loading friends.</p>");
+    }
+}
+
+function displayShareFriends(friends, trackId) {
+    const friendsListContainer = $("#share-modal-friends-list");
+    friendsListContainer.empty();
+    let modal = $("#share-modal");
+
+    if (friends.length > 0) {
+        friends.forEach(friendship => {
+            const friend = friendship.user;
+            if (!friend) return;
+
+            const item = $(`
+                <button type="button" class="list-group-item list-group-item-action">
+                    <div class="d-flex flex-column">
+                        <span class="fw-bold">${friend.username}</span>
+                        <small class="text-muted">${friend.email}</small>
+                    </div>
+                </button>
+            `);
+
+            item.on("click", function () {
+                shareSongUrl(trackId, friend._id);
+                showNotification(`Shared a song with ${friend.username}`, 'success');
+                modal.hide();
+            });
+
+            friendsListContainer.append(item);
+        });
+    } else {
+        friendsListContainer.html("<p>No friends found.</p>");
+    }
+}
+
+async function shareSongUrl(trackId, receiverId) {
+    try {
+        const response = await fetch(`${MESSAGES_URL}/send?token=${sessionStorage.token}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                receiverId: receiverId,
+                url: `Check out this track: https://open.spotify.com/track/${trackId}`
+            })
+        });
+        const data = await response.json();
+    } catch (error) {
+        console.error("Error sharing song URL:", error);
+    }
 }
