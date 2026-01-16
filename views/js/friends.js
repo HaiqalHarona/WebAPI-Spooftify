@@ -54,6 +54,7 @@ $(async function () {
         const userId = userCard.attr('data-user-id');
         const username = userCard.find('.username').text();
         openChatPopup(userId, username);
+        loadChat(userId);
     });
 
     $(".requests-list.incoming").on("click", ".action-btn.accept", function (event) {
@@ -381,8 +382,8 @@ function openChatPopup(userId, username) {
                         <button type="button" class="btn-close close-chat-modal" aria-label="Close" style="filter: invert(1); background: none; border: none; font-size: 1.5rem; cursor: pointer;">&times;</button>
                     </div>
                     <div class="modal-body" style="height: 400px; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column;">
-                        <div id="chat-history" class="chat-history" style="flex-grow: 1;">
-                            <p class="text-center text-muted" style="color: #b3b3b3; text-align: center; margin-top: 20px;">No chat history available.</p>
+                        <div id="chat-history" class="chat-history" style="flex-grow: 1; display: flex; flex-direction: column;">
+                            <p class="text-center text-muted" style="color: #b3b3b3; text-align: center; margin-top: 20px;">Loading chat...</p>
                         </div>
                     </div>
 
@@ -394,13 +395,68 @@ function openChatPopup(userId, username) {
     $('body').append(modalHtml);
 
     // Close handlers
-    $('.close-chat-modal').on('click', function() {
+    $('.close-chat-modal').on('click', function () {
         $('#chat-modal').remove();
     });
-    
-    $('#chat-modal').on('click', function(e) {
+
+    $('#chat-modal').on('click', function (e) {
         if (e.target === this) {
             $(this).remove();
         }
     });
+    
+
+
+}
+async function loadChat(user2Id) {
+    try {
+        const response = await fetch(`${MESSAGES_URL}/${user2Id}?token=${sessionStorage.token}`);
+        const data = await response.json();
+        const chatHistoryContainer = $("#chat-history");
+        chatHistoryContainer.empty();
+
+        if (response.ok && data.success && data.chat && data.chat.Messages) {
+            const messages = data.chat.Messages;
+
+            if (messages.length === 0) {
+                chatHistoryContainer.html('<p style="color: #b3b3b3; padding: 1rem; text-align: center;">No messages yet.</p>');
+                return;
+            }
+
+            messages.forEach(msg => {
+                const isIncoming = msg.from._id === user2Id;
+                const bubbleStyle = isIncoming
+                    ? 'background-color: #3E3E3E; color: white; border-radius: 0px 15px 15px 15px; align-self: flex-start;'
+                    : 'background-color: #1DB954; color: white; border-radius: 15px 0px 15px 15px; align-self: flex-end;';
+
+                const time = new Date(msg.sentAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                
+                let content = msg.songurl;
+                // Basic URL detection
+                if (content.includes('http')) {
+                     const urlRegex = /(https?:\/\/[^\s]+)/g;
+                     content = content.replace(urlRegex, url => `<a href="${url}" target="_blank" style="color: inherit; text-decoration: underline;">${url}</a>`);
+                }
+
+                const msgHtml = `
+                    <div class="message-bubble" style="max-width: 75%; margin-bottom: 10px; padding: 10px 15px; ${bubbleStyle} position: relative; word-wrap: break-word; box-shadow: 0 1px 2px rgba(0,0,0,0.2);">
+                        <div class="message-text" style="font-size: 0.95rem;">${content}</div>
+                        <div class="message-time" style="font-size: 0.7rem; text-align: right; margin-top: 4px; opacity: 0.7;">${time}</div>
+                    </div>
+                `;
+                chatHistoryContainer.append(msgHtml);
+            });
+
+            // Scroll to bottom
+            const modalBody = chatHistoryContainer.parent();
+            modalBody.scrollTop(modalBody[0].scrollHeight);
+
+        } else {
+            chatHistoryContainer.html('<p style="color: #b3b3b3; padding: 1rem; text-align: center;">No chat history available.</p>');
+        }
+    } catch (error) {
+        console.error("Error loading chat:", error);
+        $("#chat-history").html('<p style="color: #b3b3b3; padding: 1rem; text-align: center;">Error loading chat.</p>');
+    }
+
 }
