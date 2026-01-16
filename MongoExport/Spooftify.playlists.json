@@ -1,0 +1,37 @@
+[{
+  "_id": {
+    "$oid": "696a0f4c28692e33cd50e215"
+  },
+  "user": {
+    "$oid": "6961316594b6b28ce1ee4630"
+  },
+  "name": "Shunguang",
+  "tracks": [
+    {
+      "spotifyTrackId": "2jCJjRc9mz6VYBMhLy3H9i",
+      "name": "Plastic Cigarette",
+      "artist": "Zach Bryan",
+      "album": "With Heaven On Top",
+      "durationMs": 185788,
+      "albumImage": "https://i.scdn.co/image/ab67616d0000b273459f61f8bbf10c91f24d5e6a",
+      "_id": {
+        "$oid": "696a0f5528692e33cd50e22a"
+      }
+    },
+    {
+      "spotifyTrackId": "554qQSs9lpRVq6TlaaiIKT",
+      "name": "4 Raws",
+      "artist": "EsDeeKid",
+      "album": "Rebel",
+      "durationMs": 146666,
+      "albumImage": "https://i.scdn.co/image/ab67616d0000b2732940ac3a182dac2a5ec72249",
+      "_id": {
+        "$oid": "696a0f6028692e33cd50e251"
+      }
+    }
+  ],
+  "createdAt": {
+    "$date": "2026-01-16T10:13:32.696Z"
+  },
+  "__v": 2
+}]

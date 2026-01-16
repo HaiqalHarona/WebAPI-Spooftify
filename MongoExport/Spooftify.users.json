@@ -1,0 +1,150 @@
+[{
+  "_id": {
+    "$oid": "6961316594b6b28ce1ee4630"
+  },
+  "email": "usertest@gmail.com",
+  "password": "1234",
+  "username": "Nino Nakano",
+  "createdAt": {
+    "$date": "2026-01-09T16:48:37.551Z"
+  },
+  "__v": 0,
+  "friends": [
+    {
+      "user": {
+        "$oid": "6962387770a60b2d696bb785"
+      },
+      "status": "accepted",
+      "_id": {
+        "$oid": "69653823be64da1ef68298e0"
+      }
+    },
+    {
+      "user": {
+        "$oid": "6962bb70d3c585f91595885c"
+      },
+      "status": "accepted",
+      "_id": {
+        "$oid": "6967bf51cca4ebe75a3efa5b"
+      }
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6962387770a60b2d696bb785"
+  },
+  "email": "friendtest@gmail.com",
+  "password": "1234",
+  "username": "Yixuan",
+  "createdAt": {
+    "$date": "2026-01-10T11:31:03.382Z"
+  },
+  "__v": 0,
+  "requests": [],
+  "friends": [
+    {
+      "user": {
+        "$oid": "6961316594b6b28ce1ee4630"
+      },
+      "status": "accepted",
+      "_id": {
+        "$oid": "696552c175fcff30a5ec938f"
+      }
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6962bb40d3c585f915958856"
+  },
+  "email": "user2@gmail.com",
+  "password": "1234",
+  "username": "Ye Shunguang",
+  "createdAt": {
+    "$date": "2026-01-10T20:49:04.673Z"
+  },
+  "friends": [],
+  "requests": [],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6962bb50d3c585f915958859"
+  },
+  "email": "user3@gmail.com",
+  "password": "1234",
+  "username": "Miyabi",
+  "createdAt": {
+    "$date": "2026-01-10T20:49:20.234Z"
+  },
+  "friends": [],
+  "requests": [],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6962bb70d3c585f91595885c"
+  },
+  "email": "user4@gmail.com",
+  "password": "1234",
+  "username": "Zhu Yuan",
+  "createdAt": {
+    "$date": "2026-01-10T20:49:52.723Z"
+  },
+  "friends": [
+    {
+      "user": {
+        "$oid": "6961316594b6b28ce1ee4630"
+      },
+      "status": "accepted",
+      "_id": {
+        "$oid": "6967bf88e9c382ffb3e06ff2"
+      }
+    }
+  ],
+  "requests": [],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "696a603b7faea1de400af762"
+  },
+  "email": "user5@gmail.com",
+  "password": "1234",
+  "username": "Jane Doe",
+  "createdAt": {
+    "$date": "2026-01-16T15:58:51.535Z"
+  },
+  "friends": [],
+  "requests": [],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "696a614029104fb3ac966821"
+  },
+  "email": "user9@gmail.com",
+  "password": "1234",
+  "username": "Ellen Joe",
+  "createdAt": {
+    "$date": "2026-01-16T16:03:12.473Z"
+  },
+  "friends": [],
+  "requests": [],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "696a61b729104fb3ac966824"
+  },
+  "email": "user10@gmail.com",
+  "password": "1234",
+  "username": "Corin",
+  "createdAt": {
+    "$date": "2026-01-16T16:05:11.681Z"
+  },
+  "friends": [],
+  "requests": [],
+  "__v": 0
+}]

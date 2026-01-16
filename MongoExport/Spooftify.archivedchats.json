@@ -1,0 +1,119 @@
+[{
+  "_id": {
+    "$oid": "6969eba40ee063b30d9fe7e4"
+  },
+  "participants": [
+    {
+      "$oid": "6961316594b6b28ce1ee4630"
+    },
+    {
+      "$oid": "6962387770a60b2d696bb785"
+    }
+  ],
+  "Messages": [
+    {
+      "from": {
+        "$oid": "6962387770a60b2d696bb785"
+      },
+      "to": {
+        "$oid": "6961316594b6b28ce1ee4630"
+      },
+      "songurl": "https://open.spotify.com/track/6klLvorLoo1sxvZcjJIY8I?si=28191aadb8214355",
+      "_id": {
+        "$oid": "6969eba40ee063b30d9fe7e5"
+      },
+      "sentAt": {
+        "$date": "2026-01-16T07:41:24.510Z"
+      }
+    },
+    {
+      "from": {
+        "$oid": "6961316594b6b28ce1ee4630"
+      },
+      "to": {
+        "$oid": "6962387770a60b2d696bb785"
+      },
+      "songurl": "Check out this track: https://open.spotify.com/track/4e76Ss3ji7HQZ4qwcPNkNA",
+      "_id": {
+        "$oid": "696a1bd528692e33cd50e2ce"
+      },
+      "sentAt": {
+        "$date": "2026-01-16T11:07:01.627Z"
+      }
+    }
+  ],
+  "createdAt": {
+    "$date": "2026-01-16T07:41:24.515Z"
+  },
+  "updatedAt": {
+    "$date": "2026-01-16T11:07:01.628Z"
+  },
+  "__v": 1
+},
+{
+  "_id": {
+    "$oid": "696a0e2f6c933f8e24b8cb2e"
+  },
+  "participants": [
+    {
+      "$oid": "6961316594b6b28ce1ee4630"
+    },
+    {
+      "$oid": "6962bb70d3c585f91595885c"
+    }
+  ],
+  "Messages": [
+    {
+      "from": {
+        "$oid": "6961316594b6b28ce1ee4630"
+      },
+      "to": {
+        "$oid": "6962bb70d3c585f91595885c"
+      },
+      "songurl": "Check out this track: https://open.spotify.com/track/6tHVEMyRfxGgQuXRzl2yOF",
+      "_id": {
+        "$oid": "696a0e2f6c933f8e24b8cb2f"
+      },
+      "sentAt": {
+        "$date": "2026-01-16T10:08:47.126Z"
+      }
+    },
+    {
+      "from": {
+        "$oid": "6961316594b6b28ce1ee4630"
+      },
+      "to": {
+        "$oid": "6962bb70d3c585f91595885c"
+      },
+      "songurl": "Check out this track: https://open.spotify.com/track/1vLqigPHwiFnXsfrLMehV1",
+      "_id": {
+        "$oid": "696a1bde28692e33cd50e2e2"
+      },
+      "sentAt": {
+        "$date": "2026-01-16T11:07:10.646Z"
+      }
+    },
+    {
+      "from": {
+        "$oid": "6961316594b6b28ce1ee4630"
+      },
+      "to": {
+        "$oid": "6962bb70d3c585f91595885c"
+      },
+      "songurl": "Check out this track: https://open.spotify.com/track/60wwxj6Dd9NJlirf84wr2c",
+      "_id": {
+        "$oid": "696a5688a1ab4b9e7bd0cea8"
+      },
+      "sentAt": {
+        "$date": "2026-01-16T15:17:28.819Z"
+      }
+    }
+  ],
+  "createdAt": {
+    "$date": "2026-01-16T10:08:47.129Z"
+  },
+  "updatedAt": {
+    "$date": "2026-01-16T15:17:28.825Z"
+  },
+  "__v": 2
+}]

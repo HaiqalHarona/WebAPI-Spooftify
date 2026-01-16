@@ -1,0 +1,33 @@
+[{
+  "_id": {
+    "$oid": "6962679c95b5f9ab6afc64b5"
+  },
+  "tracks": [
+    {
+      "spotifyTrackId": "4DpNNXFMMxQEKl7r0ykkWA",
+      "name": "Play Date",
+      "artist": "Melanie Martinez",
+      "album": "Cry Baby (Deluxe Edition)",
+      "durationMs": 179867,
+      "albumImage": "https://i.scdn.co/image/ab67616d0000b2733899712512f50a8d9e01e951",
+      "_id": {
+        "$oid": "6962679c95b5f9ab6afc64b6"
+      }
+    },
+    {
+      "spotifyTrackId": "1slKaLV7LQffrmGPOQvBq7",
+      "name": "CLOUD9999",
+      "artist": "Akira Complex, XENVITA",
+      "album": "CLOUD9999",
+      "durationMs": 141333,
+      "albumImage": "https://i.scdn.co/image/ab67616d0000b273ac23677be7e8fbcdc007a485",
+      "_id": {
+        "$oid": "6962c16ba6554317da1dd685"
+      }
+    }
+  ],
+  "user": {
+    "$oid": "6961316594b6b28ce1ee4630"
+  },
+  "__v": 17
+}]

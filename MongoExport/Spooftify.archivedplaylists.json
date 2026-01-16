@@ -1,0 +1,40 @@
+[{
+  "_id": {
+    "$oid": "696a0f7728692e33cd50e2af"
+  },
+  "user": {
+    "$oid": "6961316594b6b28ce1ee4630"
+  },
+  "originalPlaylistId": {
+    "$oid": "696a0f6f28692e33cd50e288"
+  },
+  "name": "ArchiveTest",
+  "tracks": [
+    {
+      "spotifyTrackId": "554qQSs9lpRVq6TlaaiIKT",
+      "name": "4 Raws",
+      "artist": "EsDeeKid",
+      "album": "Rebel",
+      "durationMs": 146666,
+      "albumImage": "https://i.scdn.co/image/ab67616d0000b2732940ac3a182dac2a5ec72249",
+      "_id": {
+        "$oid": "696a0f7728692e33cd50e2b0"
+      }
+    },
+    {
+      "spotifyTrackId": "1slKaLV7LQffrmGPOQvBq7",
+      "name": "CLOUD9999",
+      "artist": "Akira Complex, XENVITA",
+      "album": "CLOUD9999",
+      "durationMs": 141333,
+      "albumImage": "https://i.scdn.co/image/ab67616d0000b273ac23677be7e8fbcdc007a485",
+      "_id": {
+        "$oid": "696a0f7728692e33cd50e2b1"
+      }
+    }
+  ],
+  "archivedAt": {
+    "$date": "2026-01-16T10:14:15.693Z"
+  },
+  "__v": 0
+}]

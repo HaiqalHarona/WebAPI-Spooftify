@@ -68,6 +68,8 @@ npm start
 *   **Displaying Song Lyrics**: Display lyrics for songs using an external API
 *   **Archiving Playlist**: Archive playlists users no longer actively use
 *   **Liked Songs**: Users can like songs and view their liked songs
+*   **Chat**: Users can share songs to other user
+*   **Add Friends**: Users can add friends and view their friends list
 
 
 ---
@@ -210,6 +212,7 @@ const spotifyCredentials = {
 *   **POST /api/playlists/create** - Create a new playlist (requires authentication)
 *   **GET /api/playlists** - Get all playlists for the authenticated user
 *   **DELETE /api/playlists/:id** - Delete a playlist (requires authentication)
+*   **PUT /api/playlists/:id** - Update playlist name (requires authentication)
 *   **POST /api/playlists/:id/add** - Add a track to a playlist (requires authentication)
 *   **DELETE /api/playlists/:id/tracks/:trackId** - Remove a track from a playlist (requires authentication)
 *   **GET /api/playlists/:id/tracks** - Get all tracks from a playlist (requires authentication)
@@ -225,6 +228,27 @@ const spotifyCredentials = {
 *   **POST /api/liked-songs** - Add a track to user's liked songs (requires authentication)
 *   **DELETE /api/liked-songs/:trackId** - Remove a track from user's liked songs (requires authentication)
 *   **GET /api/liked-songs** - Get all liked songs for the authenticated user (requires authentication)
+
+### User Management
+
+*   **GET /api/users** - Get authenticated user information (requires authentication)
+*   **PUT /api/users** - Update user information (requires authentication)
+*   **GET /api/users/search/:query** - Search for users (requires authentication)
+
+### Friend Management
+
+*   **POST /api/users/friends** - Send friend request (requires authentication)
+*   **GET /api/users/friends** - Get friends list (requires authentication)
+*   **GET /api/users/requests** - Get pending friend requests (requires authentication)
+*   **PUT /api/users/friends/accept/:reqid** - Accept friend request (requires authentication)
+*   **PUT /api/users/friends/reject/:reqid** - Reject friend request (requires authentication)
+*   **PUT /api/users/friends/remove/:reqid** - Remove friend (requires authentication)
+
+### Message Management
+
+*   **POST /api/messages/send** - Send a song share message (requires authentication)
+*   **GET /api/messages/:user2Id** - Get chat history with a user (requires authentication)
+*   **GET /api/messages/chat/:userId** - Get all chats for user (requires authentication)
 
 ---
 

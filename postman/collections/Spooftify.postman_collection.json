@@ -4,17 +4,16 @@
     "name": "Spooftify",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "49758715",
-    "_collection_link": "https://jamycharle-5723632.postman.co/workspace/ea4a61ac-592c-46a3-816b-60f97315b99a/collection/49758715-565e3267-57d5-475c-9416-2503e86af386?action=share&source=collection_link&creator=49758715"
+    "_collection_link": "https://go.postman.co/collection/49758715-565e3267-57d5-475c-9416-2503e86af386?source=collection_link"
   },
   "item": [
     {
       "name": "SearchSongs",
-      "id": "43d26f0f-9cbf-4e1e-9a41-9cf7be121eef",
       "request": {
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{url}}api/search?q=graduating hallucinating&token={{token}}",
+          "raw": "{{url}}api/search?q=jkggjygfyj&token={{token}}",
           "host": [
             "{{url}}api"
           ],
@@ -24,7 +23,7 @@
           "query": [
             {
               "key": "q",
-              "value": "graduating hallucinating"
+              "value": "jkggjygfyj"
             },
             {
               "key": "token",
@@ -37,7 +36,6 @@
     },
     {
       "name": "GetTrackDetails",
-      "id": "cee1227e-4ef6-42c0-86f9-d9e965b6abf3",
       "request": {
         "method": "GET",
         "header": [],
@@ -62,7 +60,6 @@
     },
     {
       "name": "GetLyrics",
-      "id": "9355f8a8-469c-4409-8e91-1b9c965ffa59",
       "request": {
         "method": "GET",
         "header": [],
@@ -88,7 +85,6 @@
     },
     {
       "name": "CreateUser",
-      "id": "3dbbdf5c-e1a7-443a-9269-6aaa61b37282",
       "request": {
         "method": "POST",
         "header": [],
@@ -97,18 +93,21 @@
           "urlencoded": [
             {
               "key": "email",
-              "value": "usertest2@gmail.com",
-              "type": "text"
+              "value": "user4@gmail.com",
+              "type": "text",
+              "uuid": "859d7118-244e-46ef-a6e9-25ac318fbacf"
             },
             {
               "key": "password",
-              "value": "12345678",
-              "type": "text"
+              "value": "1234",
+              "type": "text",
+              "uuid": "e3bac00a-f0fd-4896-852f-c8bdd3640085"
             },
             {
               "key": "username",
-              "value": "UserTest22",
-              "type": "text"
+              "value": "Zhu Yuan",
+              "type": "text",
+              "uuid": "e7ab82f5-e930-4a54-998f-5313bfcb539f"
             }
           ]
         },
@@ -130,7 +129,6 @@
         {
           "listen": "test",
           "script": {
-            "id": "29d29490-df3a-4f0b-b8cf-bae4d02b734f",
             "exec": [
               "if (pm.response.code === 200) {",
               "    let jsonData;",
@@ -152,7 +150,6 @@
         {
           "listen": "prerequest",
           "script": {
-            "id": "47fb0ab3-23fd-48ae-921b-3c0c3efa91e1",
             "exec": [
               ""
             ],
@@ -162,7 +159,6 @@
           }
         }
       ],
-      "id": "6cbfe53c-0ecf-4f8b-a6f8-81594d6094fb",
       "request": {
         "method": "POST",
         "header": [],
@@ -171,13 +167,15 @@
           "urlencoded": [
             {
               "key": "email",
-              "value": "usertest@gmail.com",
-              "type": "text"
+              "value": "friendtest@gmail.com",
+              "type": "text",
+              "uuid": "719f23a0-7193-4afb-81e5-039cdd9d3a41"
             },
             {
               "key": "password",
-              "value": "12345678",
-              "type": "text"
+              "value": "1234",
+              "type": "text",
+              "uuid": "a6686288-eb8a-44a1-8185-c33c894fa5ea"
             }
           ]
         },
@@ -195,7 +193,6 @@
     },
     {
       "name": "Logout",
-      "id": "64491cee-4062-4e2b-bdb5-2f929257c8be",
       "request": {
         "method": "GET",
         "header": [],
@@ -219,7 +216,6 @@
     },
     {
       "name": "CreatePlaylist",
-      "id": "ab9869c1-e2ac-4d7b-a6b2-b1bb25803b82",
       "request": {
         "method": "POST",
         "header": [],
@@ -229,7 +225,8 @@
             {
               "key": "name",
               "value": "PlaylistTest221121wwww",
-              "type": "text"
+              "type": "text",
+              "uuid": "13f3c7ba-e5c5-4648-8d1a-c6d8231f277f"
             }
           ]
         },
@@ -254,7 +251,6 @@
     },
     {
       "name": "AddToPlaylist",
-      "id": "9c1f9022-d2dd-4adc-b306-8b04fa1efdba",
       "request": {
         "method": "POST",
         "header": [],
@@ -264,7 +260,8 @@
             {
               "key": "spotifyTrackId",
               "value": "6zfjxjWld0WCAnPsk8TeqG",
-              "type": "text"
+              "type": "text",
+              "uuid": "b26e8b62-303a-4dde-8991-174e4ee11e35"
             }
           ]
         },
@@ -290,7 +287,6 @@
     },
     {
       "name": "ArchivePlaylist",
-      "id": "46fffdbd-1b3e-461c-a6eb-70fdd82b9e1f",
       "request": {
         "method": "POST",
         "header": [],
@@ -316,7 +312,6 @@
     },
     {
       "name": "UnarchivePlaylist",
-      "id": "4fcef321-8adb-4561-84ca-884debb4ace8",
       "request": {
         "method": "POST",
         "header": [],
@@ -342,7 +337,6 @@
     },
     {
       "name": "DeletePlaylist",
-      "id": "f5a7f914-52ef-42bf-a48e-b9092afe9427",
       "request": {
         "method": "DELETE",
         "header": [],
@@ -367,7 +361,6 @@
     },
     {
       "name": "GetAllArchivePlaylist",
-      "id": "93835826-1c96-4712-ba83-bd2ee3ef9d33",
       "request": {
         "method": "GET",
         "header": [],
@@ -391,7 +384,6 @@
     },
     {
       "name": "GetAllPlaylist",
-      "id": "d2809001-a901-4b5c-b73e-02608be40ad9",
       "request": {
         "method": "GET",
         "header": [],
@@ -415,7 +407,6 @@
     },
     {
       "name": "LikeSongs",
-      "id": "4a1eafdb-ca64-4981-875c-7ce86fcbc476",
       "request": {
         "method": "POST",
         "header": [],
@@ -425,7 +416,8 @@
             {
               "key": "spotifyTrackId",
               "value": "27NirKBeqbyairEHlEuyEk",
-              "type": "text"
+              "type": "text",
+              "uuid": "9d03df24-4d0f-4972-b326-92e1677d0d5e"
             }
           ]
         },
@@ -449,7 +441,6 @@
     },
     {
       "name": "RemoveLikeSongs",
-      "id": "c643fbe8-422a-48be-8ff3-04a4efe9da8d",
       "request": {
         "method": "DELETE",
         "header": [],
@@ -474,7 +465,6 @@
     },
     {
       "name": "RemoveSongsFromPlaylist",
-      "id": "63faf0a4-648c-4806-b2a1-bd7343fd2c28",
       "request": {
         "method": "DELETE",
         "header": [],
@@ -501,7 +491,6 @@
     },
     {
       "name": "GetUserLikeSongs",
-      "id": "b951d668-fe85-4bfc-bea5-5328d5baf571",
       "request": {
         "method": "GET",
         "header": [],
@@ -525,7 +514,6 @@
     },
     {
       "name": "GetAllTracksFromPlaylist",
-      "id": "58f7d380-4253-46bd-b7e9-8bc5c54b90df",
       "request": {
         "method": "GET",
         "header": [],
@@ -538,6 +526,409 @@
             "playlists",
             "693357956dc4e651da122563",
             "tracks"
+          ],
+          "query": [
+            {
+              "key": "token",
+              "value": "{{token}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "UpdateUserDetails",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "username",
+              "value": "userUpdated",
+              "type": "text",
+              "uuid": "9fe0bdfb-9b9c-4810-8ca8-a685b534a627"
+            },
+            {
+              "key": "password",
+              "value": "1234",
+              "type": "text",
+              "uuid": "dd18438a-310d-45be-ae89-5cd87f316964"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{url}}api/users?token={{token}}",
+          "host": [
+            "{{url}}api"
+          ],
+          "path": [
+            "users"
+          ],
+          "query": [
+            {
+              "key": "token",
+              "value": "{{token}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "AddFriend",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "friendId",
+              "value": "6961316594b6b28ce1ee4630",
+              "type": "text",
+              "uuid": "10e1b836-9c14-47a2-b31f-04573bc2b030"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{url}}api/users/friends?token={{token}}",
+          "host": [
+            "{{url}}api"
+          ],
+          "path": [
+            "users",
+            "friends"
+          ],
+          "query": [
+            {
+              "key": "token",
+              "value": "{{token}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "UpdatePlaylistName",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "name",
+              "value": "updatedplaylistnamechange",
+              "type": "text",
+              "uuid": "eab16b20-56b0-4ae1-abaf-db6fd1720069"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{url}}api/playlists/695cf11dc8c4cd6d80b6a8b1?token={{token}}",
+          "host": [
+            "{{url}}api"
+          ],
+          "path": [
+            "playlists",
+            "695cf11dc8c4cd6d80b6a8b1"
+          ],
+          "query": [
+            {
+              "key": "token",
+              "value": "{{token}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "AcceptFriendRequest",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "url": {
+          "raw": "{{url}}api/users/friends/accept/6961316594b6b28ce1ee4630?token={{token}}",
+          "host": [
+            "{{url}}api"
+          ],
+          "path": [
+            "users",
+            "friends",
+            "accept",
+            "6961316594b6b28ce1ee4630"
+          ],
+          "query": [
+            {
+              "key": "token",
+              "value": "{{token}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "RejectFriendRequest",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "friendId",
+              "value": "69451c1f168af9a1286c5f59",
+              "type": "text",
+              "uuid": "10e1b836-9c14-47a2-b31f-04573bc2b030"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{url}}api/users/friends/reject/6961316594b6b28ce1ee4630?token={{token}}",
+          "host": [
+            "{{url}}api"
+          ],
+          "path": [
+            "users",
+            "friends",
+            "reject",
+            "6961316594b6b28ce1ee4630"
+          ],
+          "query": [
+            {
+              "key": "token",
+              "value": "{{token}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "RemoveFriend",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "url": {
+          "raw": "{{url}}api/users/friends/remove/6962387770a60b2d696bb785?token={{token}}",
+          "host": [
+            "{{url}}api"
+          ],
+          "path": [
+            "users",
+            "friends",
+            "remove",
+            "6962387770a60b2d696bb785"
+          ],
+          "query": [
+            {
+              "key": "token",
+              "value": "{{token}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "SearchUsers",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{url}}api/users/search/Ni?token={{token}}",
+          "host": [
+            "{{url}}api"
+          ],
+          "path": [
+            "users",
+            "search",
+            "Ni"
+          ],
+          "query": [
+            {
+              "key": "token",
+              "value": "{{token}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GetUsersRequests",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{url}}api/users/requests?token={{token}}",
+          "host": [
+            "{{url}}api"
+          ],
+          "path": [
+            "users",
+            "requests"
+          ],
+          "query": [
+            {
+              "key": "token",
+              "value": "{{token}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GetFriends",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{url}}api/users/friends?token={{token}}",
+          "host": [
+            "{{url}}api"
+          ],
+          "path": [
+            "users",
+            "friends"
+          ],
+          "query": [
+            {
+              "key": "token",
+              "value": "{{token}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "SendMessages",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "receiverId",
+              "value": "6961316594b6b28ce1ee4630",
+              "type": "text",
+              "uuid": "5bdedd37-ab34-4d76-9e9c-48cfa767de28"
+            },
+            {
+              "key": "url",
+              "value": "https://open.spotify.com/track/6klLvorLoo1sxvZcjJIY8I?si=28191aadb8214355",
+              "type": "text",
+              "uuid": "4b31e5eb-88bc-4867-bb4c-62b617fc274b"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{url}}api/messages/send?token={{token}}",
+          "host": [
+            "{{url}}api"
+          ],
+          "path": [
+            "messages",
+            "send"
+          ],
+          "query": [
+            {
+              "key": "token",
+              "value": "{{token}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GetChatMessages",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{url}}api/messages/6961316594b6b28ce1ee4630?token={{token}}",
+          "host": [
+            "{{url}}api"
+          ],
+          "path": [
+            "messages",
+            "6961316594b6b28ce1ee4630"
+          ],
+          "query": [
+            {
+              "key": "token",
+              "value": "{{token}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GetUserChats",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{url}}api/messages/chat/6962387770a60b2d696bb785?token={{token}}",
+          "host": [
+            "{{url}}api"
+          ],
+          "path": [
+            "messages",
+            "chat",
+            "6962387770a60b2d696bb785"
+          ],
+          "query": [
+            {
+              "key": "token",
+              "value": "{{token}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GetMessagesByChatId",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "chatid",
+              "value": "6969eba40ee063b30d9fe7e4",
+              "type": "text",
+              "uuid": "b79e329a-dc12-415d-b0af-413b5227511e"
+            },
+            {
+              "key": "user2Id",
+              "value": "6961316594b6b28ce1ee4630",
+              "type": "text",
+              "uuid": "0db62a6b-4c0f-436e-97ad-e69ce046788e"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{url}}api/messages/chat?token={{token}}",
+          "host": [
+            "{{url}}api"
+          ],
+          "path": [
+            "messages",
+            "chat"
           ],
           "query": [
             {
