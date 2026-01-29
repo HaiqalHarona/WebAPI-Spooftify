@@ -780,14 +780,14 @@ router.post('/api/messages/chat', async function (req, res) {
 
 
 // Route to start the connection process of the user spotify account
-router.get('/spotify/api/connect', authenticate, (req, res) => {
+router.get('/api/spotify/connect', (req, res) => {
     const userId = res.locals.userId;
     const url = spotify.createAuthURL(userId);
     res.json({ url: url });
 });
 
-// Note: This route doesn't use 'authenticate' middleware because the request comes from Spotify, not your frontend app directly.
-router.get('/spotify/api/callback', async (req, res) => {
+// This route doesn't use 'authenticate' middleware because the request comes from Spotify, not your frontend app directly.
+router.get('/api/spotify/callback', async (req, res) => {
     const { code, state } = req.query;
     const userId = state;
 
@@ -807,7 +807,7 @@ router.get('/spotify/api/callback', async (req, res) => {
 });
 
 // Get User Spotify Stats
-router.get('/spotify/api/stats', authenticate, async (req, res) => {
+router.get('/api/spotify/stats', async (req, res) => {
     const userId = res.locals.userId;
 
     try {
