@@ -49,7 +49,7 @@ const spotifyService = {
       clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
       redirectUri: process.env.REDIRECT_URI
     });
-    return tempApi.createAuthorizeURL(scopes, state);
+    return tempApi.createAuthorizeURL(scopes, state, 'true');
   },
   // Handle the callback code and save spotify tokens
   async authorizeUser(code) {

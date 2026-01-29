@@ -142,6 +142,7 @@ router.get('/users/logout', authenticate, async function (req, res) {
 
   try {
     await user.removeToken(userId);
+    await user.findbyIdAndUpdate(userId, { spotifyRefreshtoken: null });
     res.status(200).json({ "message": 'Logout Successful' });
   } catch (error) {
     console.error('Error in user logout route:', error.message);
@@ -787,7 +788,7 @@ router.get('/api/spotify/connect', (req, res) => {
 });
 
 // This route doesn't use 'authenticate' middleware because the request comes from Spotify, not your frontend app directly.
-router.get('/api/spotify/callback', async (req, res) => {
+router.get('/spotify/api/callback', async (req, res) => {
     const { code, state } = req.query;
     const userId = state;
 
@@ -796,13 +797,12 @@ router.get('/api/spotify/callback', async (req, res) => {
         const tokens = await spotify.authorizeUser(code);
 
         // Update User in DB with Refresh Token
-        await user.UpdateUser(userId, { 
+        await user.UpdateUser({_id: userId}, { 
             spotifyRefreshtoken: tokens.refreshToken,
         });
         res.redirect('/profilepage.html');
     } catch (error) {
         console.error(error);
-        res.redirect('/profilepage.html?error=spotify_connection_failed');
     }
 });
 

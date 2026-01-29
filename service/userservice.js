@@ -124,7 +124,8 @@ let userservice = {
         try {
             const result = await user.findByIdAndUpdate(userId, {
                 $unset: {
-                    token: 1
+                    token: 1,
+                    spotifyRefreshtoken: 1
                 }
             });
             if (!result) {

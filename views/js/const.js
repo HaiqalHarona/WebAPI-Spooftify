@@ -28,3 +28,4 @@ const MESSAGES_URL = `${BASE_URL}/api/messages`;
 
 // Logged into spotify account
 const SPOTIFY_LOGGED_IN = `${BASE_URL}/api/spotify`;
+const CALLBACK = `${BASE_URL}/spotify/api/callback`;
