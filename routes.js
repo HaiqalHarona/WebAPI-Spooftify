@@ -779,6 +779,59 @@ router.post('/api/messages/chat', async function (req, res) {
 });
 
 
+// Route to start the connection process of the user spotify account
+router.get('/spotify/api/connect', authenticate, (req, res) => {
+    const userId = res.locals.userId;
+    const url = spotify.createAuthURL(userId);
+    res.json({ url: url });
+});
+
+// Note: This route doesn't use 'authenticate' middleware because the request comes from Spotify, not your frontend app directly.
+router.get('/spotify/api/callback', async (req, res) => {
+    const { code, state } = req.query;
+    const userId = state;
+
+    try {
+        // Exchange code for tokens
+        const tokens = await spotify.authorizeUser(code);
+
+        // Update User in DB with Refresh Token
+        await user.UpdateUser(userId, { 
+            spotifyRefreshtoken: tokens.refreshToken,
+        });
+        res.redirect('/profilepage.html');
+    } catch (error) {
+        console.error(error);
+        res.redirect('/profilepage.html?error=spotify_connection_failed');
+    }
+});
+
+// Get User Spotify Stats
+router.get('/spotify/api/stats', authenticate, async (req, res) => {
+    const userId = res.locals.userId;
+
+    try {
+        // Get user from DB to retrieve Refresh Token 
+        const userData = await user.getUserById(userId);
+        
+        if (!userData.spotifyRefreshtoken) {
+            return res.status(400).json({ connected: false, message: "Spotify not connected" });
+        }
+
+        const stats = await spotify.getUserStats(userData.spotifyRefreshtoken);
+        
+        res.json({
+            success: true,
+            connected: true,
+            stats: stats
+        });
+
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+
+
 
 
 module.exports = router;

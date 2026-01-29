@@ -28,7 +28,8 @@ const userSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: 'users'
         },
-    }]
+    }],
+    spotifyRefreshtoken: String,
 
 })
 module.exports = mongoose.model('users', userSchema);

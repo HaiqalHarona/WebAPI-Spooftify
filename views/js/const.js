@@ -1,5 +1,4 @@
-const BASE_URL = 'http://localhost:3000';
-
+const BASE_URL = 'https://127.0.0.1:3000';
 // Authentication
 const LOGIN_URL = `${BASE_URL}/users/login`;
 const LOGOUT_URL = `${BASE_URL}/users/logout`;
@@ -26,3 +25,6 @@ const USERS_URL = `${BASE_URL}/api/users`;
 
 // Messages
 const MESSAGES_URL = `${BASE_URL}/api/messages`;
+
+// Logged into spotify account
+const SPOTIFY_LOGGED_IN = `${BASE_URL}/spotify/api`;
