@@ -142,7 +142,6 @@ router.get('/users/logout', authenticate, async function (req, res) {
 
   try {
     await user.removeToken(userId);
-    await user.findbyIdAndUpdate(userId, { spotifyRefreshtoken: null });
     res.status(200).json({ "message": 'Logout Successful' });
   } catch (error) {
     console.error('Error in user logout route:', error.message);

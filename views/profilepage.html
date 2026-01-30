@@ -63,11 +63,24 @@
         </div>
 
         <div id="spotify-stats-section" style="display:none; margin-top: 20px;">
-            <h4 style="color:white; margin-bottom:10px;">Top Tracks (Last 4 Weeks)</h4>
-            <ul id="top-tracks-list" style="color: #b3b3b3; list-style: none; padding: 0;"></ul>
 
-            <h4 style="color:white; margin-bottom:10px; margin-top:20px;">Top Artists</h4>
-            <ul id="top-artists-list" style="color: #b3b3b3; list-style: none; padding: 0;"></ul>
+            <div class="stats-card" style="margin-bottom: 30px; text-align: center;">
+                <h4 style="color:white; margin-bottom:10px;">Recent Activity</h4>
+                <div class="hours-display">
+                    <span id="hours-played-count" style="font-size: 3rem; font-weight: bold; color: #1DB954;">0</span>
+                    <span style="font-size: 1.2rem; color: #b3b3b3;">Hours Played</span>
+                </div>
+                <small style="color: #666;">(Calculated from your last 50 played tracks)</small>
+            </div>
+
+            <h4 style="color:white; margin-bottom:15px; margin-top:30px;">Top Tracks (Last Month)</h4>
+            <ul id="top-tracks-month-list" class="stats-list"></ul>
+
+            <h4 style="color:white; margin-bottom:15px; margin-top:40px;">Top Tracks (All Time)</h4>
+            <ul id="top-tracks-alltime-list" class="stats-list"></ul>
+
+            <h4 style="color:white; margin-bottom:15px; margin-top:40px;">Top Artists (All Time)</h4>
+            <ul id="top-artists-alltime-list" class="stats-list"></ul>
         </div>
     </main>
 

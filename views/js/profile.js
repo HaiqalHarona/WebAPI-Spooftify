@@ -50,26 +50,39 @@ async function checkSpotifyConnection() {
     }
 }
 
-// Format display user's stats
+// Format and display user stats
 function displayStats(stats) {
-    // Render Top Tracks
-    const tracksList = stats.topTracks.map((track, index) =>
-        `<li style="margin-bottom: 8px;">
-            ${index + 1}. <strong style="color:white;">${track.name}</strong> - ${track.artists[0].name}
-         </li>`
-    ).join('');
-    $('#top-tracks-list').html(tracksList);
+    $('#hours-played-count').text(stats.hoursPlayed || '0');
 
-    // Render Top Artists
-    const artistsList = stats.topArtists.map((artist, index) =>
-        `<li style="margin-bottom: 8px;">
-            ${index + 1}. <strong style="color:white;">${artist.name}</strong>
+    const monthTracksHtml = stats.topTracksMonth.map((track, index) => createTrackItem(track, index)).join('');
+    $('#top-tracks-month-list').html(monthTracksHtml);
+
+    const allTimeTracksHtml = stats.topTracksAllTime.map((track, index) => createTrackItem(track, index)).join('');
+    $('#top-tracks-alltime-list').html(allTimeTracksHtml);
+
+    const artistsHtml = stats.topArtistsAllTime.map((artist, index) => 
+        `<li class="stat-item">
+            <span class="stat-number">${index + 1}</span>
+            <img src="${artist.image || './assets/default-album.png'}" alt="${artist.name}" class="stat-img rounded-circle">
+            <div class="stat-info">
+                <a href="${artist.url}" target="_blank" class="stat-name">${artist.name}</a>
+            </div>
          </li>`
     ).join('');
-    $('#top-artists-list').html(artistsList);
+    $('#top-artists-alltime-list').html(artistsHtml);
 }
 
-
+// Helper to create track list item
+function createTrackItem(track, index) {
+    return `<li class="stat-item">
+        <span class="stat-number">${index + 1}</span>
+        <img src="${track.image || './assets/default-album.png'}" alt="${track.album}" class="stat-img">
+        <div class="stat-info">
+            <a href="${track.url}" target="_blank" class="stat-name">${track.name}</a>
+            <span class="stat-artist">${track.artist}</span>
+        </div>
+     </li>`;
+}
 
 // Function to get user email
 async function getUserEmail() {

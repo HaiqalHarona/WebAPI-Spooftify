@@ -41,7 +41,7 @@ const spotifyService = {
 
   // User to connect to their spotify account
   createAuthURL(userId) {
-    const scopes = ['user-top-read', 'user-read-private', 'user-read-email'];
+    const scopes = ['user-top-read', 'user-read-private', 'user-read-email','user-read-recently-played'];
     const state = userId.toString();
     // Create a temporary instance to generate URL
     const tempApi = new SpotifyWebApi({
@@ -71,9 +71,7 @@ const spotifyService = {
       throw error;
     }
   },
-  // Get User Stats using saved spotify token
   async getUserStats(refreshToken) {
-    // Create a new instance specifically for this user request
     const userApi = new SpotifyWebApi({
       clientId: process.env.SPOTIFY_CLIENT_ID,
       clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
@@ -81,19 +79,45 @@ const spotifyService = {
     });
 
     try {
-      // Refresh the access token
       const data = await userApi.refreshAccessToken();
       userApi.setAccessToken(data.body['access_token']);
 
-      // Fetch Top Tracks
-      const topTracks = await userApi.getMyTopTracks({ limit: 5, time_range: 'short_term' }); // short_term = 4 weeks
+      // Calculate Hours Played
+      const recentTracks = await userApi.getMyRecentlyPlayedTracks({ limit: 50 });
+      let totalDurationMs = 0;
+      recentTracks.body.items.forEach(item => {
+        totalDurationMs += item.track.duration_ms;
+      });
+      const hoursPlayed = (totalDurationMs / (1000 * 60 * 60)).toFixed(1); // Convert ms to hours
 
-      // Fetch Top Artists
-      const topArtists = await userApi.getMyTopArtists({ limit: 5, time_range: 'short_term' });
+      // Top Tracks last month
+      const topTracksMonth = await userApi.getMyTopTracks({ limit: 10, time_range: 'short_term' });
+
+      // Top Tracks all time
+      const topTracksAllTime = await userApi.getMyTopTracks({ limit: 10, time_range: 'long_term' });
+
+      // Top Artists all time
+      const topArtistsAllTime = await userApi.getMyTopArtists({ limit: 10, time_range: 'long_term' });
+
+      // Helper to format track data
+      const formatTrack = (track) => ({
+        name: track.name,
+        artist: track.artists.map(a => a.name).join(', '),
+        album: track.album.name,
+        image: track.album.images[0] ? track.album.images[0].url : null,
+        url: track.external_urls.spotify
+      });
 
       return {
-        topTracks: topTracks.body.items,
-        topArtists: topArtists.body.items
+        hoursPlayed: hoursPlayed,
+        recentTrackCount: recentTracks.body.items.length,
+        topTracksMonth: topTracksMonth.body.items.map(formatTrack),
+        topTracksAllTime: topTracksAllTime.body.items.map(formatTrack),
+        topArtistsAllTime: topArtistsAllTime.body.items.map(artist => ({
+          name: artist.name,
+          image: artist.images[0] ? artist.images[0].url : null,
+          url: artist.external_urls.spotify
+        }))
       };
     } catch (error) {
       console.error('Error fetching user stats:', error);

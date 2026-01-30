@@ -70,6 +70,7 @@ npm start
 *   **Liked Songs**: Users can like songs and view their liked songs
 *   **Chat**: Users can share songs to other user
 *   **Add Friends**: Users can add friends and view their friends list
+*   **Spotify Stats**: Connect your personal Spotify account to view your top tracks and artists
 
 
 ---
@@ -206,6 +207,12 @@ const spotifyCredentials = {
 *   **GET /api/search** - Search for tracks on Spotify (requires authentication)
 *   **GET /api/tracks/:id** - Get track details from Spotify (requires authentication)
 *   **GET /api/tracks/:trackId/lyrics** - Get lyrics for a specific track (requires authentication)
+
+### Spotify Account Connection
+
+*   **GET /api/spotify/connect** - Start the Spotify authorization process (requires authentication)
+*   **GET /spotify/api/callback** - Callback URL for Spotify authorization
+*   **GET /api/spotify/stats** - Get user's top tracks and artists (requires authentication)
 
 ### Playlist Management
 
